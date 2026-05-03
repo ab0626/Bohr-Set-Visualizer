@@ -66,8 +66,8 @@ with st.expander(
     expanded=False,
 ):
     st.markdown(
-        "Same Θ throughout; **ε_inner < ε_outer** so **ν(B₂) ≤ ν(B₁)**. "
-        "Sparse **A** is Bernoulli subsampling inside **B₁** (relative density in **B₁**)."
+        r"Same **$\Theta$** throughout; **$\varepsilon_{\mathrm{inner}} < \varepsilon_{\mathrm{outer}}$** so **$\nu(B_2) \le \nu(B_1)$**. "
+        r"Sparse **$A$** is Bernoulli subsampling inside **$B_1$** (relative density in **$B_1$**)."
     )
     eps_outer = st.slider("ε_outer = ν(B₁)", min_value=0.02, max_value=0.49, value=0.12, step=0.002, format="%.3f", key="eo")
     _ei_max = min(float(eps_outer) - 0.004, 0.485)
@@ -181,7 +181,7 @@ with tab1:
         st.markdown(
             r"""
 The paper’s **coloring** corollary (Sec. 8, Corollary 1.2 style) lives on **$G \times G \times G$** with **$L \asymp \log\log\log \lvert G\rvert$** colors.
-This toy colors **one copy** of $\mathbb{Z}_N$ and asks how many colors hit **$\Lambda$** and whether **$\Lambda$** is **monochromatic** under a fixed rule.
+This toy colors **one copy** of $\mathbb{Z}_{N}$ and asks how many colors hit **$\Lambda$** and whether **$\Lambda$** is **monochromatic** under a fixed rule.
 It is **not** a 3D corner finder; it illustrates why **quasipolynomial** density savings beat **doubly logarithmic** ones for tower-type color-size tradeoffs.
             """
         )
@@ -420,14 +420,14 @@ Here **$\varepsilon_i = \varepsilon_0 \eta^i$** with fixed **$\Theta$** (same ra
 with tab6:
     st.markdown(
         r"""
-**Definition 6.13** ($(B_1,B_2,\varepsilon)$ **ℓ₁-spread**): for **f : B₁ → [0,1]**,
+**Definition 6.13** ($\ell_{1}$-spread, parameters **$(B_1,B_2,\varepsilon)$**): for **$f : B_1 \to [0,1]$**,
 
 $$
 \mathbb{E}_{x \sim B_1}\,\Bigl\lvert\,\mathbb{E}_{y \sim B_2}[f(x+y)] - \mathbb{E}[f]\,\Bigr\rvert \;\le\; \varepsilon \cdot \mathbb{E}[f],
 $$
 
-with **E[f] = E_{x∼B₁}[f(x)]**. Below, **f = 1_A** (extended by **0** off **A**). The heatmap shows **pointwise**
-$\bigl\lvert \mathbb{E}_{y \sim B_2}[f(x+y)] - \mathbb{E}[f]\bigr\rvert$ over **x ∈ ℤ_N**; the tracker compares the **left-hand average over x ~ B₁** to **ε · E[f]** (your ε_tolerance).
+with **$\mathbb{E}[f] = \mathbb{E}_{x \sim B_1}[f(x)]$**. Below, **$f = \mathbf{1}_{A}$** (extended by **$0$** off **$A$**). The heatmap shows **pointwise**
+$\bigl\lvert \mathbb{E}_{y \sim B_2}[f(x+y)] - \mathbb{E}[f]\bigr\rvert$ over **$x \in \mathbb{Z}_{N}$**; the tracker compares the **left-hand average over $x \sim B_1$** to **$\varepsilon \cdot \mathbb{E}[f]$** (your ε_tolerance).
         """
     )
     eps_l1 = st.slider(
@@ -481,8 +481,8 @@ $\bigl\lvert \mathbb{E}_{y \sim B_2}[f(x+y)] - \mathbb{E}[f]\bigr\rvert$ over **
 with tab7:
     st.markdown(
         r"""
-**Dual characters of** $\mathbb{Z}_N$: $\chi_r(x)=e^{-2\pi i r x/N}$. For $f:\mathbb{Z}_N\to\mathbb{R}$ the transform is
-$\widehat{f}(r)=\sum_x f(x)\,\chi_r(x)$. This tab plots **$\bigl\lvert\widehat{\mathbb{1}_{\Lambda}}(r)\bigr\rvert$** (and optional other indicators).
+**Dual characters of** $\mathbb{Z}_{N}$: $\chi_{r}(x) = e^{-2\pi i\, r x / N}$. For $f : \mathbb{Z}_{N} \to \mathbb{R}$ the transform is
+$\widehat{f}(r) = \sum_x f(x)\,\chi_{r}(x)$. This tab plots **$\bigl\lvert\widehat{\mathbb{1}_{\Lambda}}(r)\bigr\rvert$** (and optional other indicators).
 Peaks at small $r$ and at the defining modes $\Theta$ illustrate that Bohr sets are **concentrated in low / structured frequency** (cf. almost periodicity, Sec. 6.2 and Appendix A in the paper).
         """
     )
