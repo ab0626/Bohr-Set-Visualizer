@@ -180,7 +180,7 @@ with tab1:
     with st.expander("Coloring strip (Sec. 8 — pedagogical)", expanded=False):
         st.markdown(
             r"""
-The paper’s **coloring** corollary (Sec. 8, Corollary 1.2 style) lives on **$G \times G \times G$** with **$L \asymp \log\log\log |G|$** colors.
+The paper’s **coloring** corollary (Sec. 8, Corollary 1.2 style) lives on **$G \times G \times G$** with **$L \asymp \log\log\log \lvert G\rvert$** colors.
 This toy colors **one copy** of $\mathbb{Z}_N$ and asks how many colors hit **$\Lambda$** and whether **$\Lambda$** is **monochromatic** under a fixed rule.
 It is **not** a 3D corner finder; it illustrates why **quasipolynomial** density savings beat **doubly logarithmic** ones for tower-type color-size tradeoffs.
             """
@@ -217,8 +217,8 @@ It is **not** a 3D corner finder; it illustrates why **quasipolynomial** density
         c2.metric("Λ monochromatic?", "yes" if cstat.lambda_monochromatic else "no")
         c3.metric("P(random i.i.d. coloring makes Λ mono)", f"{cstat.p_random_monochromatic:.2e}")
         st.caption(
-            "If the abelian theorem only gave doubly-log savings, color-size guarantees would degrade to **tower-type** dependencies; "
-            "quasipolynomial density decay is what makes an **L ≈ log log log |G|** scale feasible in the paper."
+            r"If the abelian theorem only gave doubly-log savings, color-size guarantees would degrade to **tower-type** dependencies; "
+            r"quasipolynomial density decay is what makes an **$L \approx \log\log\log \lvert G\rvert$** scale feasible in the paper."
         )
 
     st.subheader("|Λ| vs dimension d")
@@ -243,10 +243,10 @@ It is **not** a 3D corner finder; it illustrates why **quasipolynomial** density
 
 with tab2:
     st.markdown(
-        """
-**Regularity check:** For small **σ**, compare **Λ_{ε(1−σ)}**, **Λ_ε**, **Λ_{ε(1+σ)}**.
-If the relative symmetric difference between the inner and outer sandwich is small compared to **|Λ_ε|**,
-then perturbing **ε** slightly changes membership in a predictable way (no sudden mass loss/gain).
+        r"""
+**Regularity check:** For small **$\sigma$**, compare **$\Lambda_{\varepsilon(1-\sigma)}$**, **$\Lambda_{\varepsilon}$**, **$\Lambda_{\varepsilon(1+\sigma)}$**.
+If the relative symmetric difference between the inner and outer sandwich is small compared to **$\lvert \Lambda_{\varepsilon}\rvert$**,
+then perturbing **$\varepsilon$** slightly changes membership in a predictable way (no sudden mass loss/gain).
         """
     )
     sigma = st.slider("σ (relative width)", min_value=0.001, max_value=0.2, value=0.05, step=0.001)
@@ -273,9 +273,9 @@ then perturbing **ε** slightly changes membership in a predictable way (no sudd
 
 with tab3:
     st.markdown(
-        """
-**Random walk:** **X₀ = 0**, **X_{t+1} = X_t + S_t (mod N)** with **S_t** uniform on **Λ_{Θ,ε}**.
-Long-run visit frequencies test mixing and **shift invariance**: compare empirical **P** to **P** shifted by **a ∈ Λ**.
+        r"""
+**Random walk:** **$X_0 = 0$**, **$X_{t+1} = X_t + S_t \pmod{N}$** with **$S_t$** uniform on **$\Lambda_{\Theta,\varepsilon}$**.
+Long-run visit frequencies test mixing and **shift invariance**: compare empirical **$P$** to **$P$** shifted by **$a \in \Lambda$**.
         """
     )
     steps = st.number_input("Walk length (steps)", min_value=100, max_value=5_000_000, value=80_000, step=1000)
@@ -327,9 +327,9 @@ Long-run visit frequencies test mixing and **shift invariance**: compare empiric
 
 with tab4:
     st.markdown(
-        """
-**Sub-Bohr (relative) sifting.** Majorant **B₁** is sparse in **G**, but one searches for structured subsets **A ⊂ B₁**
-and refines by a smaller Bohr neighborhood **B₂**. Compare global density **|A|/|G|** to **|A ∩ B₂|/|B₂|** (“density inside the inner Bohr tube”).
+        r"""
+**Sub-Bohr (relative) sifting.** Majorant **$B_1$** is sparse in **$G$**, but one searches for structured subsets **$A \subset B_1$**
+and refines by a smaller Bohr neighborhood **$B_2$**. Compare global density **$\lvert A\rvert/\lvert G\rvert$** to **$\lvert A \cap B_2\rvert/\lvert B_2\rvert$** (“density inside the inner Bohr tube”).
         """
     )
     if int(m_b1.sum()) == 0:
@@ -382,9 +382,9 @@ and refines by a smaller Bohr neighborhood **B₂**. Compare global density **|A
 
 with tab5:
     st.markdown(
-        """
-**Increment chain (Def. 6.6 style).** A **(d, η)-small sequence** uses the same frequencies, nested radii with **ν(B_{i+1})/ν(B_i) ≤ η**.
-Here **ε_i = ε₀ η^i** with fixed **Θ** (same rank). Compare masses **|Λ_{Θ, ε_i}|** as the Bohr window zooms in — the density-increment proof repeatedly passes to smaller regular Bohr sets.
+        r"""
+**Increment chain (Def. 6.6 style).** A **$(d,\eta)$-small sequence** uses the same frequencies, nested radii with **$\nu(B_{i+1})/\nu(B_i) \le \eta$**.
+Here **$\varepsilon_i = \varepsilon_0 \eta^i$** with fixed **$\Theta$** (same rank). Compare masses **$\lvert \Lambda_{\Theta,\varepsilon_i}\rvert$** as the Bohr window zooms in — the density-increment proof repeatedly passes to smaller regular Bohr sets.
         """
     )
     eps0_chain = st.slider("Starting ε₀ (chain)", min_value=0.02, max_value=0.49, value=float(eps_outer), step=0.002, format="%.3f", key="eps0_chain")
@@ -423,11 +423,11 @@ with tab6:
 **Definition 6.13** ($(B_1,B_2,\varepsilon)$ **ℓ₁-spread**): for **f : B₁ → [0,1]**,
 
 $$
-\mathbb{E}_{x \sim B_1}\Big|\mathbb{E}_{y \sim B_2}[f(x+y)] - \mathbb{E}[f]\Big| \leq \varepsilon \cdot \mathbb{E}[f],
+\mathbb{E}_{x \sim B_1}\,\Bigl\lvert\,\mathbb{E}_{y \sim B_2}[f(x+y)] - \mathbb{E}[f]\,\Bigr\rvert \;\le\; \varepsilon \cdot \mathbb{E}[f],
 $$
 
 with **E[f] = E_{x∼B₁}[f(x)]**. Below, **f = 1_A** (extended by **0** off **A**). The heatmap shows **pointwise**
-$\big|\mathbb{E}_{y \sim B_2}[f(x+y)] - \mathbb{E}[f]\big|$ over **x ∈ ℤ_N**; the tracker compares the **left-hand average over x ~ B₁** to **ε · E[f]** (your ε_tolerance).
+$\bigl\lvert \mathbb{E}_{y \sim B_2}[f(x+y)] - \mathbb{E}[f]\bigr\rvert$ over **x ∈ ℤ_N**; the tracker compares the **left-hand average over x ~ B₁** to **ε · E[f]** (your ε_tolerance).
         """
     )
     eps_l1 = st.slider(
@@ -480,10 +480,10 @@ $\big|\mathbb{E}_{y \sim B_2}[f(x+y)] - \mathbb{E}[f]\big|$ over **x ∈ ℤ_N**
 
 with tab7:
     st.markdown(
-        """
-**Dual characters of** $\\mathbb{Z}_N$: $\\chi_r(x)=e^{-2\\pi i r x/N}$. For $f:\\mathbb{Z}_N\\to\\mathbb{R}$ the transform is
-$\\widehat f(r)=\\sum_x f(x)\\chi_r(x)$. This tab plots **$|\\widehat{\\mathbb{1}_{\\Lambda}}(r)|$** (and optional other indicators).
-Peaks at small $r$ and at the defining modes $\\Theta$ illustrate that Bohr sets are **concentrated in low / structured frequency** (cf. almost periodicity, Sec. 6.2 and Appendix A in the paper).
+        r"""
+**Dual characters of** $\mathbb{Z}_N$: $\chi_r(x)=e^{-2\pi i r x/N}$. For $f:\mathbb{Z}_N\to\mathbb{R}$ the transform is
+$\widehat{f}(r)=\sum_x f(x)\,\chi_r(x)$. This tab plots **$\bigl\lvert\widehat{\mathbb{1}_{\Lambda}}(r)\bigr\rvert$** (and optional other indicators).
+Peaks at small $r$ and at the defining modes $\Theta$ illustrate that Bohr sets are **concentrated in low / structured frequency** (cf. almost periodicity, Sec. 6.2 and Appendix A in the paper).
         """
     )
     which_f = st.selectbox(
@@ -502,7 +502,9 @@ Peaks at small $r$ and at the defining modes $\\Theta$ illustrate that Bohr sets
     mag = dual_group_fourier_magnitude(f_sp)
     r_axis = np.arange(int(N))
     fig_ft = go.Figure()
-    fig_ft.add_trace(go.Scatter(x=r_axis, y=mag, mode="lines", name=r"|\\hat f(r)|", line=dict(width=1.2)))
+    fig_ft.add_trace(
+        go.Scatter(x=r_axis, y=mag, mode="lines", name=r"$|\widehat{f}(r)|$", line=dict(width=1.2))
+    )
     for th in thetas:
         fig_ft.add_vline(
             x=th,
@@ -523,14 +525,14 @@ Peaks at small $r$ and at the defining modes $\\Theta$ illustrate that Bohr sets
 
 with tab8:
     st.markdown(
-        """
-**Pedagogical proxy (not a full Gowers grid-norm check).** Lemma 7.1’s **well-conditioned** pairs require small grid norms
-$\\|\\mathbb{1}_X(x+\\cdot)\\|_{(B_i,\\dots)}$ simultaneously for several $i$ — too expensive to compute here.
+        r"""
+**Pedagogical proxy (not a full Gowers grid-norm check).** Lemma 7.1’s **well-conditioned** pairs require small **Gowers grid norms**
+$\lVert \mathbb{1}_X(x+\cdot)\rVert_{(B_i,\ldots)}$ simultaneously for several $i$ — too expensive to compute here.
 
-Instead we score each $(x,y)\\in B_1\\times B_2$ by **three slice checks** inspired by the surrounding discussion:
-**X**-slice and **Y**-slice stability under averaging along **B₂**, and **D**-stability along sums **x+y** (compare Sec. 7.1 with Lemma 7.5’s ‘not poor’ regime).
+Instead we score each $(x,y)\in B_1\times B_2$ by **three slice checks** inspired by the surrounding discussion:
+**X**-slice and **Y**-slice stability under averaging along **B₂**, and **D**-stability along sums **x + y** (compare Sec. 7.1 with Lemma 7.5’s “not poor” regime).
 
-Scores $0,1,2,3$ count how many checks pass at your thresholds $(\\varepsilon_s,\\varepsilon_L)$.
+Scores $0,1,2,3$ count how many checks pass at your thresholds $(\varepsilon_s,\varepsilon_L)$.
         """
     )
     ph_eps_s = st.slider("ε_s (slice tolerance vs δ)", min_value=0.01, max_value=0.5, value=0.12, step=0.01, key="ph_eps_s")
