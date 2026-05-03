@@ -2,9 +2,9 @@
 
 ## Description
 
-The **Bohr Set Visualizer** is a **Streamlit** research app plus Python numerics for **Bohr sets** $\Lambda_{\Theta,\varepsilon}$ inside $\mathbb{Z}_N$, motivated by the corners theorem proof for general abelian groups in Jaber–Liu–Lovett–Ostuni–Sawhney ([arXiv:2504.07006](https://arxiv.org/abs/2504.07006)). It turns dense definitions (regular Bohr sets, relative sifting, $(d,\eta)$ chains, $\ell_1$-spreadness, dual Fourier spectrum, and qualitative links to Sec. 7 and Sec. 8) into **plots and sliders** you can change live.
+The **Bohr Set Visualizer** is a **Streamlit** research app plus Python numerics for **Bohr sets** $\Lambda_{\Theta,\varepsilon}$ inside $\mathbb{Z}_{N}$, motivated by the corners theorem proof for general abelian groups in Jaber–Liu–Lovett–Ostuni–Sawhney ([arXiv:2504.07006](https://arxiv.org/abs/2504.07006)). It turns dense definitions (regular Bohr sets, relative sifting, $(d,\eta)$ chains, $\ell_1$-spreadness, dual Fourier spectrum, and qualitative links to Sec. 7 and Sec. 8) into **plots and sliders** you can change live.
 
-**Scope.** The implementation fixes $G=\mathbb{Z}_N$ with explicit characters $\chi_\theta(x)=e^{2\pi i \theta x / N}$; the README also summarizes how such abelian inputs relate to **extensions beyond abelian groups** and **coloring** results stated in the paper.
+**Scope.** The implementation fixes $G=\mathbb{Z}_{N}$ with explicit characters $\chi_{\theta}(x)=e^{2\pi i \theta x / N}$; the README also summarizes how such abelian inputs relate to **extensions beyond abelian groups** and **coloring** results stated in the paper.
 
 **GitHub “About” (one line, copy-paste):**  
 *Interactive Streamlit tool: Bohr sets in ℤ_N, regularity, sub-Bohr sifting, increment chains, ℓ₁-spread and Fourier views, pair-health proxy, and coloring pedagogy—aligned with arXiv:2504.07006 (quasipolynomial corners).*
@@ -45,7 +45,7 @@ flowchart TB
 
 ---
 
-## Non-abelian groups (Section 1.1): where $\mathbb{Z}_N$ fits
+## Non-abelian groups (Section 1.1): where $\mathbb{Z}_{N}$ fits
 
 The main theorem is stated for **finite abelian** $G$, but the introduction explains a striking extension: **quasipolynomial** corner bounds for abelian groups imply analogous bounds for **every finite group** $G$, including non-abelian ones. The pipeline (Fox-type argument, as discussed in Sec. 1.1) is:
 
@@ -53,7 +53,7 @@ The main theorem is stated for **finite abelian** $G$, but the introduction expl
 2. **Run the abelian theory** on $H$ — Bohr sets, relative sifting, grid norms, and the diagonal “$\ell_1$-spread” phenomena you simulate here are native to that step.
 3. **Average / lift** from $H$ back to $G$ so that dense corner-free structure in $G$ cannot evade the abelian obstruction.
 
-**Implementation link.** This repository only draws **$G = \mathbb{Z}_N$**, but that model is exactly the kind of **abelian building block** that feeds the general proof: Bohr sets are the right **containers** inside $H$; the lift to arbitrary $G$ is conceptual, not a different codebase.
+**Implementation link.** This repository only draws **$G = \mathbb{Z}_{N}$**, but that model is exactly the kind of **abelian building block** that feeds the general proof: Bohr sets are the right **containers** inside $H$; the lift to arbitrary $G$ is conceptual, not a different codebase.
 
 ![Conceptual pipeline: abelian piece to full group](docs/images/nonabelian_pipeline.png)
 
@@ -65,7 +65,7 @@ The main theorem is stated for **finite abelian** $G$, but the introduction expl
 
 The paper’s **coloring** corollary (Corollary 1.2, Sec. 8) addresses **$G \times G \times G$** with about **$L \asymp \log\log\log \lvert G\rvert$** colors, forcing a **monochromatic corner**. The authors stress that with **only** doubly-logarithmic density savings (as in Shkredov’s classical regime), one would face **tower-type** losses in how many colors can be handled — i.e. the quantitative strength of the new bound is what makes a **polylogarithmic-in-log** color count possible.
 
-**Visualizer add-on.** Under **Tab 1 → “Coloring strip”**, the app assigns an **$L$-coloring** of $\mathbb{Z}_N$ (either $x \bmod L$ or i.i.d. random) and reports how many colors appear on the current Bohr set $\Lambda$, whether $\Lambda$ is monochromatic, and the exact probability $L^{1-\lvert \Lambda\rvert}$ that a **fully random** coloring makes $\Lambda$ monochromatic. That toy is **1-dimensional**; it is meant only to build intuition for why density decay **stronger than** $(\log\log \lvert G\rvert)^{-c}$ matters for multicolor statements.
+**Visualizer add-on.** Under **Tab 1 → “Coloring strip”**, the app assigns an **$L$-coloring** of $\mathbb{Z}_{N}$ (either $x \bmod L$ or i.i.d. random) and reports how many colors appear on the current Bohr set $\Lambda$, whether $\Lambda$ is monochromatic, and the exact probability $L^{1-\lvert \Lambda\rvert}$ that a **fully random** coloring makes $\Lambda$ monochromatic. That toy is **1-dimensional**; it is meant only to build intuition for why density decay **stronger than** $(\log\log \lvert G\rvert)^{-c}$ matters for multicolor statements.
 
 ---
 
@@ -126,9 +126,9 @@ This captures **approximate shift-invariance** when the shift lies in a smaller 
 
 ---
 
-## Cyclic group model ($G = \mathbb{Z}_N$)
+## Cyclic group model ($G = \mathbb{Z}_{N}$)
 
-Characters are $\chi_\theta(x) = e^{2\pi i \theta x/N}$ with $\theta \in \{0,\ldots,N-1\}$. This repo implements
+Characters are $\chi_{\theta}(x) = e^{2\pi i \theta x/N}$ with $\theta \in \{0,\ldots,N-1\}$. This repo implements
 
 **$\ell_\infty$ ball:**
 
@@ -174,7 +174,7 @@ $$
 
 with $\mathbb{E}[f]=\mathbb{E}_{x\sim B_1}[f(x)]$.
 
-**What the tool computes.** For $f = \mathbf{1}_A$ (extended by zero off $A$), it approximates the **left-hand side** above and compares it to $\varepsilon_{\mathrm{tolerance}} \cdot \mathbb{E}[f]$. The bar plot over $x \in \mathbb{Z}_N$ shows pointwise magnitudes $\bigl\lvert \mathbb{E}_{y \sim B_2}[f(x+y)] - \mathbb{E}[f]\bigr\rvert$ — empirical feedback for the **log-potential** style analysis that rules out persistent “dips below the mean” on bad pieces of $D$.
+**What the tool computes.** For $f = \mathbf{1}_{A}$ (extended by zero off $A$), it approximates the **left-hand side** above and compares it to $\varepsilon_{\mathrm{tolerance}} \cdot \mathbb{E}[f]$. The bar plot over $x \in \mathbb{Z}_{N}$ shows pointwise magnitudes $\bigl\lvert \mathbb{E}_{y \sim B_2}[f(x+y)] - \mathbb{E}[f]\bigr\rvert$ — empirical feedback for the **log-potential** style analysis that rules out persistent “dips below the mean” on bad pieces of $D$.
 
 ### Lab components vs paper concepts
 
@@ -183,7 +183,7 @@ with $\mathbb{E}[f]=\mathbb{E}_{x\sim B_1}[f(x)]$.
 | **Sub-Bohr sifting** | Relative sifting (see Sec. 2.2, Sec. 3.5) | Find structure inside a sparse majorant $B_1$ by measuring density relative to $B_1$ and refinement inside $B_2$. |
 | **Increment chain** | $(d,\eta)$-small / exact sequences (Def. 6.6) | Model the iterative Bohr “zoom” where rank is fixed and radius shrinks. |
 | **$\ell_1$-spread analysis** | Definition 6.13 | Test stability of the diagonal-type direction when full algebraic spreadness is unavailable. |
-| **Fourier spectrum (dual group)** | Sec. 6.2, Appendix A (almost periodicity) | $\bigl\lvert \widehat{\mathbb{1}_{\Lambda}}(r)\bigr\rvert$ over $r \in \mathbb{Z}_N$; compare energy at low modes and at the fixed $\Theta$ to see sparse frequency support. |
+| **Fourier spectrum (dual group)** | Sec. 6.2, Appendix A (almost periodicity) | $\bigl\lvert \widehat{\mathbb{1}_{\Lambda}}(r)\bigr\rvert$ over $r \in \mathbb{Z}_{N}$; compare energy at low modes and at the fixed $\Theta$ to see sparse frequency support. |
 | **Balanced strip** | Balanced $f - \mathbb{E}[f]$ (Sec. 2, Sec. 4) | Visualize $\mathbb{1}_{\Lambda} - \alpha$ (global or on $B_1$) to see mean-zero “clumpiness” used in Gowers-type arguments. |
 | **Pair health map (proxy)** | Sec. 7.1 (well-conditioned pairs), Lemma 7.5 (not poor) | Coarse 0–3 score from slice-stability of $X,Y$ and a $D$-tube check; **not** a full $(B_i,B_8,B_9,K,K)$ grid norm. |
 
@@ -207,7 +207,7 @@ python scripts/generate_readme_figures.py
 
 ![Cardinality of Bohr set versus epsilon](docs/images/bohr_cardinality_vs_epsilon.png)
 
-**Membership** in $\mathbb{Z}_N$ (same parameters):
+**Membership** in $\mathbb{Z}_{N}$ (same parameters):
 
 ![Indicator of Bohr set on Z_N](docs/images/bohr_indicator_zn.png)
 
@@ -217,7 +217,7 @@ python scripts/generate_readme_figures.py
 
 ### Fourier dual group (almost periodicity viewpoint)
 
-**$\bigl\lvert \widehat{\mathbb{1}_{\Lambda}}(r)\bigr\rvert$** on $\mathbb{Z}_N$ (vertical lines at frequencies in $\Theta$):
+**$\bigl\lvert \widehat{\mathbb{1}_{\Lambda}}(r)\bigr\rvert$** on $\mathbb{Z}_{N}$ (vertical lines at frequencies in $\Theta$):
 
 ![Fourier magnitudes of Bohr indicator](docs/images/fourier_bohr_indicator.png)
 
