@@ -11,6 +11,12 @@ The **Bohr Set Visualizer** is a **Streamlit** research app plus Python numerics
 
 **Math in this file** uses GitHub’s `$…$` / `$$…$$` syntax so formulas render in the GitHub web UI. **Subscripts are braced in LaTeX and escaped for Markdown** (e.g. `$\mathbb{Z}\_{N}$`, `$\chi\_{\theta}$`, `$\ell\_{1}$`): each subscript `_` is written as `\_` in the `.md` source so CommonMark does not strip `_` before KaTeX runs.
 
+### Streamlit UI (screenshot)
+
+Live controls for $N$, the ball norm (max / mean), frequency set $\Theta$, nested Bohr containers, and radius $\varepsilon$; tabs below (not fully visible here) host **regularity**, **random walk**, **sifting**, **chains**, **$\ell\_{1}$-spread**, **Fourier**, and **pair-health** views. Example state: $N=180$, $d=2$, arithmetic-progression $\Theta=[7,18]$, $\varepsilon=0.08$.
+
+![Streamlit app — main controls](docs/images/streamlit_app.png)
+
 ---
 
 ## Paper reference (PDF)
@@ -195,7 +201,7 @@ with $\mathbb{E}[f] = \mathbb{E}\_{x \sim B\_1}[f(x)]$.
 
 ## Figures (generated)
 
-These PNGs live under `docs/images/` and are referenced with **relative** paths so they render on GitHub. Regenerate after changing script defaults:
+These PNGs live under `docs/images/` and are referenced with **relative** paths so they render on GitHub. Most plots below come from `scripts/generate_readme_figures.py`; **`streamlit_app.png`** (under [Streamlit UI](#streamlit-ui-screenshot)) is updated manually from a running app (`streamlit run app.py`). Regenerate script-driven figures after changing script defaults:
 
 ```powershell
 python scripts/generate_readme_figures.py
