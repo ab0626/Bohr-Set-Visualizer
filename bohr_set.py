@@ -327,7 +327,7 @@ def uniform_on_bohr_tv(
     return 0.5 * float(np.abs(p - u).sum())
 
 
-# --- Sub-Bohr sifting, Bohr chains, ℓ₁-spreadness (paper §6) ---------------------------------
+# --- Sub-Bohr sifting, Bohr chains, ℓ₁-spreadness (paper Sec. 6) ----------------------------
 
 
 @dataclass

@@ -13,7 +13,7 @@ The **Bohr Set Visualizer** is a **Streamlit** research app plus Python numerics
 
 ### Streamlit UI (screenshot)
 
-Live controls for $N$, the ball norm (max / mean), frequency set $\Theta$, nested Bohr containers, and radius $\varepsilon$; tabs below (not fully visible here) host **regularity**, **random walk**, **sifting**, **chains**, **$\ell\_{1}$-spread**, **Fourier**, and **pair-health** views. Example state: $N=180$, $d=2$, arithmetic-progression $\Theta=[7,18]$, $\varepsilon=0.08$.
+Live controls for $N$, the ball norm (max / mean), frequency set $\Theta$, nested Bohr containers, and radius $\varepsilon$; tabs below (not fully visible here) host **regularity**, **random walk**, **sifting**, **chains**, **$\ell\_{1}$-spread**, **Fourier**, and **pair-health** views. Example state: $N=180$, $d=2$, arithmetic progression $\Theta=\{7,18\}$, $\varepsilon=0.08$.
 
 ![Streamlit app — main controls](docs/images/streamlit_app.png)
 
@@ -182,11 +182,11 @@ with $\mathbb{E}[f] = \mathbb{E}\_{x \sim B\_1}[f(x)]$.
 
 **What the tool computes.** For $f = \mathbf{1}\_{A}$ (extended by zero off $A$), it approximates the **left-hand side** above and compares it to $\varepsilon\_{\mathrm{tolerance}} \cdot \mathbb{E}[f]$. The bar plot over $x \in \mathbb{Z}\_{N}$ shows pointwise magnitudes $\bigl\lvert \mathbb{E}\_{y \sim B\_2}[f(x+y)] - \mathbb{E}[f]\bigr\rvert$ — empirical feedback for the **log-potential** style analysis that rules out persistent “dips below the mean” on bad pieces of $D$.
 
-### Stability and scaling (§6.3 · §7.1)
+### Stability and scaling (Sec. 6.3 · Sec. 7.1)
 
 **Nested density ratio.** The **Scaling · pipe** tab compares the empirical nested cardinality ratio $\lvert B\_1\rvert/\lvert B\_2\rvert$ (from $\varepsilon\_{\mathrm{outer}}$ scans at fixed $\varepsilon\_{\mathrm{inner}}$ in the expander) to the Lemma **6.2**–style guide $C\cdot(\varepsilon\_{\mathrm{outer}}/\varepsilon\_{\mathrm{inner}})^d$. Constants $C$ are illustrative; the aim is to verify **dimension scaling** in $\varepsilon$, not sharp constants.
 
-**Anisotropic Bohr.** An optional **ε_XY / ε_D** split assigns different per-character radii on $\mathbb{T}^d$ (proxy for treating the diagonal direction differently from the $X,Y$ directions in Sec. 7.1).
+**Anisotropic Bohr.** An optional **$\varepsilon\_{\mathrm{XY}}$ / $\varepsilon\_{\mathrm{D}}$** split assigns different per-character radii on $\mathbb{T}^d$ (proxy for treating the diagonal direction differently from the $X,Y$ directions in Sec. 7.1).
 
 **`grid_norm_pipe_v1`.** The same tab exports the **current** Bohr indicator mask as JSON (`schema: grid_norm_pipe_v1`) for downstream **Gowers grid norm** auditors (structured majorants, Sec. 2.3 style).
 
@@ -200,7 +200,7 @@ with $\mathbb{E}[f] = \mathbb{E}\_{x \sim B\_1}[f(x)]$.
 | **Fourier spectrum (dual group)** | Sec. 6.2, Appendix A (almost periodicity) | $\bigl\lvert \widehat{\mathbb{1}\_{\Lambda}}(r)\bigr\rvert$ over $r \in \mathbb{Z}\_{N}$; compare energy at low modes and at the fixed $\Theta$ to see sparse frequency support. |
 | **Balanced strip** | Balanced $f - \mathbb{E}[f]$ (Sec. 2, Sec. 4) | Visualize $\mathbb{1}\_{\Lambda} - \alpha$ (global or on $B\_1$) to see mean-zero “clumpiness” used in Gowers-type arguments. |
 | **Pair health map (proxy)** | Sec. 7.1 (well-conditioned pairs), Lemma 7.5 (not poor) | Coarse 0–3 score from slice-stability of $X,Y$ and a $D$-tube check; **not** a full $(B\_i,B\_8,B\_9,K,K)$ grid norm. |
-| **Scaling · pipe** | Lemma 6.2 (mass in $\varepsilon$), Sec. 7.1 / Sec. 2.3 | Nested $|B\_1|/|B\_2|$ vs $C(\varepsilon\_{\mathrm{outer}}/\varepsilon\_{\mathrm{inner}})^d$; optional **ε_XY / ε_D** anisotropic Bohr; **`grid_norm_pipe_v1`** JSON export. |
+| **Scaling · pipe** | Lemma 6.2 (mass in $\varepsilon$), Sec. 7.1 / Sec. 2.3 | Nested $\lvert B\_1\rvert/\lvert B\_2\rvert$ vs $C\cdot(\varepsilon\_{\mathrm{outer}}/\varepsilon\_{\mathrm{inner}})^d$; optional $\varepsilon\_{\mathrm{XY}}/\varepsilon\_{\mathrm{D}}$ (anisotropic Bohr); **`grid_norm_pipe_v1`** JSON export. |
 
 ### Presentation note ($\ell\_{1}$-spread and the heatmap)
 

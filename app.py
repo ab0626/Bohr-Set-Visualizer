@@ -167,7 +167,7 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9 = st.tabs(
         "ℓ₁-spread heatmap (Def. 6.13)",
         "Fourier spectrum (dual group)",
         "Pair health (Sec. 7.1 proxy)",
-        "Scaling · pipe (§6.3)",
+        "Scaling · pipe (Sec. 6.3)",
     ]
 )
 
@@ -674,7 +674,7 @@ Scores $0,1,2,3$ count how many checks pass at your thresholds $(\varepsilon_s,\
 with tab9:
     st.markdown(
         r"""
-**Nested Bohr density ratio (§6.3 maintenance).** For nested Bohr sets $B_2=\Lambda_{\Theta,\varepsilon_{\mathrm{inner}}}\subseteq B_1=\Lambda_{\Theta,\varepsilon_{\mathrm{outer}}}$,
+**Nested Bohr density ratio (Sec. 6.3 maintenance).** For nested Bohr sets $B_2=\Lambda_{\Theta,\varepsilon_{\mathrm{inner}}}\subseteq B_1=\Lambda_{\Theta,\varepsilon_{\mathrm{outer}}}$,
 the cardinality ratio $\lvert B_1\rvert/\lvert B_2\rvert$ is compared to the Lemma **6.2** scaling guide $C\cdot(\varepsilon_{\mathrm{outer}}/\varepsilon_{\mathrm{inner}})^{d}$
 (with $d=\lvert\Theta\rvert$). This is **illustrative**: sharp constants depend on $G$ and regularity; the plot checks that the implementation’s discrete counts track the correct **dimension exponent** in $\varepsilon$.
         """
