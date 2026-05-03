@@ -2,14 +2,14 @@
 
 ## Description
 
-The **Bohr Set Visualizer** is a **Streamlit** research app plus Python numerics for **Bohr sets** $\Lambda_{\Theta,\varepsilon}$ inside $\mathbb{Z}_{N}$, motivated by the corners theorem proof for general abelian groups in Jaber–Liu–Lovett–Ostuni–Sawhney ([arXiv:2504.07006](https://arxiv.org/abs/2504.07006)). It turns dense definitions (regular Bohr sets, relative sifting, $(d,\eta)$ chains, $\ell_{1}$-spreadness, dual Fourier spectrum, and qualitative links to Sec. 7 and Sec. 8) into **plots and sliders** you can change live.
+The **Bohr Set Visualizer** is a **Streamlit** research app plus Python numerics for **Bohr sets** $\Lambda\_{\Theta,\varepsilon}$ inside $\mathbb{Z}\_{N}$, motivated by the corners theorem proof for general abelian groups in Jaber–Liu–Lovett–Ostuni–Sawhney ([arXiv:2504.07006](https://arxiv.org/abs/2504.07006)). It turns dense definitions (regular Bohr sets, relative sifting, $(d,\eta)$ chains, $\ell\_{1}$-spreadness, dual Fourier spectrum, and qualitative links to Sec. 7 and Sec. 8) into **plots and sliders** you can change live.
 
-**Scope.** The implementation fixes $G = \mathbb{Z}_{N}$ with explicit characters $\chi_{\theta}(x) = e^{2\pi i\, \theta x / N}$; the README also summarizes how such abelian inputs relate to **extensions beyond abelian groups** and **coloring** results stated in the paper.
+**Scope.** The implementation fixes $G = \mathbb{Z}\_{N}$ with explicit characters $\chi\_{\theta}(x) = e^{2\pi i\, \theta x / N}$; the README also summarizes how such abelian inputs relate to **extensions beyond abelian groups** and **coloring** results stated in the paper.
 
 **GitHub “About” (one line, copy-paste):**  
 *Interactive Streamlit tool: Bohr sets in ℤ_N, regularity, sub-Bohr sifting, increment chains, ℓ₁-spread and Fourier views, pair-health proxy, and coloring pedagogy—aligned with arXiv:2504.07006 (quasipolynomial corners).*
 
-**Math in this file** uses GitHub’s `$…$` / `$$…$$` syntax so formulas render in the GitHub web UI. **Subscripts are braced** (e.g. $\mathbb{Z}_{N}$, $\chi_{\theta}$, $\ell_{1}$) so underscores are not parsed as Markdown italics.
+**Math in this file** uses GitHub’s `$…$` / `$$…$$` syntax so formulas render in the GitHub web UI. **Subscripts are braced in LaTeX and escaped for Markdown** (e.g. `$\mathbb{Z}\_{N}$`, `$\chi\_{\theta}$`, `$\ell\_{1}$`): each subscript `_` is written as `\_` in the `.md` source so CommonMark does not strip `_` before KaTeX runs.
 
 ---
 
@@ -45,15 +45,15 @@ flowchart TB
 
 ---
 
-## Non-abelian groups (Section 1.1): where $\mathbb{Z}_{N}$ fits
+## Non-abelian groups (Section 1.1): where $\mathbb{Z}\_{N}$ fits
 
 The main theorem is stated for **finite abelian** $G$, but the introduction explains a striking extension: **quasipolynomial** corner bounds for abelian groups imply analogous bounds for **every finite group** $G$, including non-abelian ones. The pipeline (Fox-type argument, as discussed in Sec. 1.1) is:
 
 1. **Find a large abelian subgroup** $H \leq G$ (every large finite group contains a proportional abelian piece).
-2. **Run the abelian theory** on $H$ — Bohr sets, relative sifting, grid norms, and the diagonal “$\ell_{1}$-spread” phenomena you simulate here are native to that step.
+2. **Run the abelian theory** on $H$ — Bohr sets, relative sifting, grid norms, and the diagonal “$\ell\_{1}$-spread” phenomena you simulate here are native to that step.
 3. **Average / lift** from $H$ back to $G$ so that dense corner-free structure in $G$ cannot evade the abelian obstruction.
 
-**Implementation link.** This repository only draws **$G = \mathbb{Z}_{N}$**, but that model is exactly the kind of **abelian building block** that feeds the general proof: Bohr sets are the right **containers** inside $H$; the lift to arbitrary $G$ is conceptual, not a different codebase.
+**Implementation link.** This repository only draws **$G = \mathbb{Z}\_{N}$**, but that model is exactly the kind of **abelian building block** that feeds the general proof: Bohr sets are the right **containers** inside $H$; the lift to arbitrary $G$ is conceptual, not a different codebase.
 
 ![Conceptual pipeline: abelian piece to full group](docs/images/nonabelian_pipeline.png)
 
@@ -65,7 +65,7 @@ The main theorem is stated for **finite abelian** $G$, but the introduction expl
 
 The paper’s **coloring** corollary (Corollary 1.2, Sec. 8) addresses **$G \times G \times G$** with about **$L \asymp \log\log\log \lvert G\rvert$** colors, forcing a **monochromatic corner**. The authors stress that with **only** doubly-logarithmic density savings (as in Shkredov’s classical regime), one would face **tower-type** losses in how many colors can be handled — i.e. the quantitative strength of the new bound is what makes a **polylogarithmic-in-log** color count possible.
 
-**Visualizer add-on.** Under **Tab 1 → “Coloring strip”**, the app assigns an **$L$-coloring** of $\mathbb{Z}_{N}$ (either $x \bmod L$ or i.i.d. random) and reports how many colors appear on the current Bohr set $\Lambda$, whether $\Lambda$ is monochromatic, and the exact probability $L^{1-\lvert \Lambda\rvert}$ that a **fully random** coloring makes $\Lambda$ monochromatic. That toy is **1-dimensional**; it is meant only to build intuition for why density decay **stronger than** $(\log\log \lvert G\rvert)^{-c}$ matters for multicolor statements.
+**Visualizer add-on.** Under **Tab 1 → “Coloring strip”**, the app assigns an **$L$-coloring** of $\mathbb{Z}\_{N}$ (either $x \bmod L$ or i.i.d. random) and reports how many colors appear on the current Bohr set $\Lambda$, whether $\Lambda$ is monochromatic, and the exact probability $L^{1-\lvert \Lambda\rvert}$ that a **fully random** coloring makes $\Lambda$ monochromatic. That toy is **1-dimensional**; it is meant only to build intuition for why density decay **stronger than** $(\log\log \lvert G\rvert)^{-c}$ matters for multicolor statements.
 
 ---
 
@@ -74,7 +74,7 @@ The paper’s **coloring** corollary (Corollary 1.2, Sec. 8) addresses **$G \tim
 | Aspect | Shkredov (2006) corner bound | Jaber et al. (2025) |
 |--------|------------------------------|----------------------|
 | **Strength** | Doubly logarithmic: density $\ll (\log\log \lvert G\rvert)^{-c}$ | **Quasipolynomial**: $\lvert A\rvert \le \lvert G\rvert^2 \exp\bigl(-(\log \lvert G\rvert)^{\Omega(1)}\bigr)$ |
-| **Core mechanism** | $L^2$ / energy-style increment | **Relative sifting**, **Bohr containers**, **Gowers grid norms**, **asymmetric** treatment of the diagonal $D$ ($\ell_{1}$-spread) |
+| **Core mechanism** | $L^2$ / energy-style increment | **Relative sifting**, **Bohr containers**, **Gowers grid norms**, **asymmetric** treatment of the diagonal $D$ ($\ell\_{1}$-spread) |
 | **Diagonal** | (Symmetric finite-field intuition) | **“Diagonal drop”**: $D$ is not assumed algebraically spread like $X,Y$ |
 
 The plot below is **illustrative only** (exponents are not those in the theorems). It compares the *shape* of a doubly-logarithmic saving with a *quasipolynomial*-type saving in $\lvert G\rvert$.
@@ -96,21 +96,21 @@ The plot below is **illustrative only** (exponents are not those in the theorems
 
 ## Definitions from the paper (Section 6.1)
 
-**Definition 6.1 (Bohr set).** Let $\varepsilon \in \mathbb{R}^+$, let $G$ be a finite abelian group, and $\Theta = (\Theta_1,\ldots,\Theta_d)$ with $\Theta_i \in \widehat{G}$ homomorphisms $G \to \mathbb{R}/\mathbb{Z}$. The Bohr set is
+**Definition 6.1 (Bohr set).** Let $\varepsilon \in \mathbb{R}^+$, let $G$ be a finite abelian group, and $\Theta = (\Theta\_1,\ldots,\Theta\_d)$ with $\Theta\_i \in \widehat{G}$ homomorphisms $G \to \mathbb{R}/\mathbb{Z}$. The Bohr set is
 
 $$
-\Lambda = \Lambda_{\Theta,\varepsilon} = \bigcap_{i=1}^{d} \Big\{ x \in G : \bigl\lVert \Theta_i(x) \bigr\rVert_{\mathbb{R}/\mathbb{Z}} \le \varepsilon \Big\},
+\Lambda = \Lambda\_{\Theta,\varepsilon} = \bigcap\_{i=1}^{d} \Big\{ x \in G : \bigl\lVert \Theta\_i(x) \bigr\rVert\_{\mathbb{R}/\mathbb{Z}} \le \varepsilon \Big\},
 $$
 
-where $\lVert x \rVert_{\mathbb{R}/\mathbb{Z}} = \min_{z \in \mathbb{Z}} \lvert x - z \rvert$. For $c > 0$, **dilation** is $c\Lambda_{\Theta,\varepsilon} = \Lambda_{\Theta,\,c\varepsilon}$. The paper calls $d$ the **dimension** and $\varepsilon$ the **radius** $\nu(\Lambda)$.
+where $\lVert x \rVert\_{\mathbb{R}/\mathbb{Z}} = \min\_{z \in \mathbb{Z}} \lvert x - z \rvert$. For $c > 0$, **dilation** is $c\Lambda\_{\Theta,\varepsilon} = \Lambda\_{\Theta,\,c\varepsilon}$. The paper calls $d$ the **dimension** and $\varepsilon$ the **radius** $\nu(\Lambda)$.
 
-**Lemma 6.2.** If $\Lambda = \Lambda_{\Theta,\varepsilon}$ has dimension $d$ and radius $\varepsilon$, then
+**Lemma 6.2.** If $\Lambda = \Lambda\_{\Theta,\varepsilon}$ has dimension $d$ and radius $\varepsilon$, then
 
 $$
 \lvert \Lambda \rvert \ge \varepsilon^d \lvert G \rvert.
 $$
 
-**Definition 6.3 (Regular).** A Bohr set $\Lambda = \Lambda_{\Theta,\varepsilon}$ of dimension $d$ is **regular** if for all $\lvert c \rvert \le 1/(100d)$,
+**Definition 6.3 (Regular).** A Bohr set $\Lambda = \Lambda\_{\Theta,\varepsilon}$ of dimension $d$ is **regular** if for all $\lvert c \rvert \le 1/(100d)$,
 
 $$
 1 - 100d\lvert c \rvert \;\le\; \frac{\bigl\lvert (1+c)\Lambda \bigr\rvert}{\lvert \Lambda \rvert} \;\le\; 1 + 100d \lvert c \rvert.
@@ -119,27 +119,27 @@ $$
 **Lemma 6.5.** Let $f$ be $1$-bounded and $\Lambda$ a **regular** Bohr set of dimension $d$. If $\lvert c \rvert \le 1/(100d)$ and $n' \in c\Lambda$, then
 
 $$
-\mathbb{E}_{n \sim \Lambda}\, f(n) \;=\; \mathbb{E}_{n \sim \Lambda}\, f(n + n') \;+\; \mathcal{O}(c d).
+\mathbb{E}\_{n \sim \Lambda}\, f(n) \;=\; \mathbb{E}\_{n \sim \Lambda}\, f(n + n') \;+\; \mathcal{O}(c d).
 $$
 
 This captures **approximate shift-invariance** when the shift lies in a smaller dilate $c\Lambda$.
 
 ---
 
-## Cyclic group model ($G = \mathbb{Z}_{N}$)
+## Cyclic group model ($G = \mathbb{Z}\_{N}$)
 
-Characters are $\chi_{\theta}(x) = e^{2\pi i\, \theta x / N}$ with $\theta \in \{0,\ldots,N-1\}$. This repo implements
+Characters are $\chi\_{\theta}(x) = e^{2\pi i\, \theta x / N}$ with $\theta \in \{0,\ldots,N-1\}$. This repo implements
 
-**$\ell_{\infty}$ (max) ball:**
-
-$$
-\max_{\theta \in \Theta}\; \Bigl\lVert \frac{\theta x}{N} \Bigr\rVert_{\mathbb{R}/\mathbb{Z}} < \varepsilon .
-$$
-
-**Mean / $\ell_{1}$ ball:**
+**$\ell\_{\infty}$ (max) ball:**
 
 $$
-\frac{1}{\lvert \Theta \rvert} \sum_{\theta \in \Theta} \Bigl\lVert \frac{\theta x}{N} \Bigr\rVert_{\mathbb{R}/\mathbb{Z}} < \varepsilon .
+\max\_{\theta \in \Theta}\; \Bigl\lVert \frac{\theta x}{N} \Bigr\rVert\_{\mathbb{R}/\mathbb{Z}} < \varepsilon .
+$$
+
+**Mean / $\ell\_{1}$ ball:**
+
+$$
+\frac{1}{\lvert \Theta \rvert} \sum\_{\theta \in \Theta} \Bigl\lVert \frac{\theta x}{N} \Bigr\rVert\_{\mathbb{R}/\mathbb{Z}} < \varepsilon .
 $$
 
 These match Definition 6.1 once each $\theta x / N$ is interpreted in $\mathbb{R}/\mathbb{Z}$ (see `bohr_set.py`).
@@ -148,48 +148,48 @@ These match Definition 6.1 once each $\theta x / N$ is interpreted in $\mathbb{R
 
 ## Research simulation: mapping to the paper
 
-The Streamlit app is not only drawing Bohr sets; it **simulates mechanisms** from the proof: relative sifting inside a sparse container, nested Bohr “zoom” chains, and **Definition 6.13** $\ell_{1}$-spreadness.
+The Streamlit app is not only drawing Bohr sets; it **simulates mechanisms** from the proof: relative sifting inside a sparse container, nested Bohr “zoom” chains, and **Definition 6.13** $\ell\_{1}$-spreadness.
 
 ### Sub-Bohr sifting and relative density (Sections 2.2, 3.5)
 
 **Problem (informal).** Classical sifting bounds degrade with the density of a majorant in all of $G$. If $A$ is tiny in $G$, crude estimates lose useful factors.
 
-**What the tool reports.** For an outer Bohr container $B_1$ and sparse $A \subset B_1$, compare **global** density $\lvert A\rvert / \lvert G\rvert$ to **relative** density $\lvert A\rvert / \lvert B_1\rvert$, and track how much of $A$ falls into a smaller inner Bohr neighborhood $B_2$. That is the right mental model for **relative sifting**: locating a sub-instance where a set that is sparse globally is still **dense enough relative to $B_1$** (and refinable inside $B_2$) to feed a density-increment argument.
+**What the tool reports.** For an outer Bohr container $B\_1$ and sparse $A \subset B\_1$, compare **global** density $\lvert A\rvert / \lvert G\rvert$ to **relative** density $\lvert A\rvert / \lvert B\_1\rvert$, and track how much of $A$ falls into a smaller inner Bohr neighborhood $B\_2$. That is the right mental model for **relative sifting**: locating a sub-instance where a set that is sparse globally is still **dense enough relative to $B\_1$** (and refinable inside $B\_2$) to feed a density-increment argument.
 
 ### Increment chains and $(d,\eta)$-small sequences (Sections 6.1, 6.6)
 
-**Logic.** Definition 6.6 fixes a **$(d,\eta)$-small sequence**: same frequency set (rank $d$), nested Bohr sets with radii shrinking so $\nu(B_{i+1}) / \nu(B_i) \le \eta$.
+**Logic.** Definition 6.6 fixes a **$(d,\eta)$-small sequence**: same frequency set (rank $d$), nested Bohr sets with radii shrinking so $\nu(B\_{i+1}) / \nu(B\_i) \le \eta$.
 
-**What the tool plots.** Radii $\varepsilon_i = \varepsilon_0 \eta^i$ at fixed $\Theta$, with cardinalities $\lvert \Lambda_{\Theta,\varepsilon_i}\rvert$. Dimension stays fixed while the radius collapses — the same “zoom” iteration that supports the density-increment loop (as in the proof structure toward results such as Theorem 7.9 in the paper).
+**What the tool plots.** Radii $\varepsilon\_i = \varepsilon\_0 \eta^i$ at fixed $\Theta$, with cardinalities $\lvert \Lambda\_{\Theta,\varepsilon\_i}\rvert$. Dimension stays fixed while the radius collapses — the same “zoom” iteration that supports the density-increment loop (as in the proof structure toward results such as Theorem 7.9 in the paper).
 
-### $\ell_{1}$-spread heatmap (Sections 6.1, 6.3; Definition 6.13)
+### $\ell\_{1}$-spread heatmap (Sections 6.1, 6.3; Definition 6.13)
 
-**Breakthrough (informal).** The diagonal-type object $D$ is not treated with the same **algebraic spreadness** used for the other sides; the authors use **$\ell_{1}$-spreadness** (Definition 6.13) as a workable substitute.
+**Breakthrough (informal).** The diagonal-type object $D$ is not treated with the same **algebraic spreadness** used for the other sides; the authors use **$\ell\_{1}$-spreadness** (Definition 6.13) as a workable substitute.
 
-**Definition 6.13 (as in the paper: $B_1,B_2$ regular Bohr sets, $\nu(B_2) \le \nu(B_1)$).** A function $f : B_1 \to [0,1]$ is **$(B_1,B_2,\varepsilon)$ $\ell_{1}$-spread** when
+**Definition 6.13 (as in the paper: $B\_1,B\_2$ regular Bohr sets, $\nu(B\_2) \le \nu(B\_1)$).** A function $f : B\_1 \to [0,1]$ is **$(B\_1,B\_2,\varepsilon)$ $\ell\_{1}$-spread** when
 
 $$
-\mathbb{E}_{x \sim B_1}\,\Bigl\lvert \mathbb{E}_{y \sim B_2}[f(x+y)] - \mathbb{E}[f] \Bigr\rvert \;\le\; \varepsilon \cdot \mathbb{E}[f],
+\mathbb{E}\_{x \sim B\_1}\,\Bigl\lvert \mathbb{E}\_{y \sim B\_2}[f(x+y)] - \mathbb{E}[f] \Bigr\rvert \;\le\; \varepsilon \cdot \mathbb{E}[f],
 $$
 
-with $\mathbb{E}[f] = \mathbb{E}_{x \sim B_1}[f(x)]$.
+with $\mathbb{E}[f] = \mathbb{E}\_{x \sim B\_1}[f(x)]$.
 
-**What the tool computes.** For $f = \mathbf{1}_{A}$ (extended by zero off $A$), it approximates the **left-hand side** above and compares it to $\varepsilon_{\mathrm{tolerance}} \cdot \mathbb{E}[f]$. The bar plot over $x \in \mathbb{Z}_{N}$ shows pointwise magnitudes $\bigl\lvert \mathbb{E}_{y \sim B_2}[f(x+y)] - \mathbb{E}[f]\bigr\rvert$ — empirical feedback for the **log-potential** style analysis that rules out persistent “dips below the mean” on bad pieces of $D$.
+**What the tool computes.** For $f = \mathbf{1}\_{A}$ (extended by zero off $A$), it approximates the **left-hand side** above and compares it to $\varepsilon\_{\mathrm{tolerance}} \cdot \mathbb{E}[f]$. The bar plot over $x \in \mathbb{Z}\_{N}$ shows pointwise magnitudes $\bigl\lvert \mathbb{E}\_{y \sim B\_2}[f(x+y)] - \mathbb{E}[f]\bigr\rvert$ — empirical feedback for the **log-potential** style analysis that rules out persistent “dips below the mean” on bad pieces of $D$.
 
 ### Lab components vs paper concepts
 
 | Lab component | Paper concept | Purpose |
 |---------------|---------------|---------|
-| **Sub-Bohr sifting** | Relative sifting (see Sec. 2.2, Sec. 3.5) | Find structure inside a sparse majorant $B_1$ by measuring density relative to $B_1$ and refinement inside $B_2$. |
+| **Sub-Bohr sifting** | Relative sifting (see Sec. 2.2, Sec. 3.5) | Find structure inside a sparse majorant $B\_1$ by measuring density relative to $B\_1$ and refinement inside $B\_2$. |
 | **Increment chain** | $(d,\eta)$-small / exact sequences (Def. 6.6) | Model the iterative Bohr “zoom” where rank is fixed and radius shrinks. |
-| **$\ell_{1}$-spread analysis** | Definition 6.13 | Test stability of the diagonal-type direction when full algebraic spreadness is unavailable. |
-| **Fourier spectrum (dual group)** | Sec. 6.2, Appendix A (almost periodicity) | $\bigl\lvert \widehat{\mathbb{1}_{\Lambda}}(r)\bigr\rvert$ over $r \in \mathbb{Z}_{N}$; compare energy at low modes and at the fixed $\Theta$ to see sparse frequency support. |
-| **Balanced strip** | Balanced $f - \mathbb{E}[f]$ (Sec. 2, Sec. 4) | Visualize $\mathbb{1}_{\Lambda} - \alpha$ (global or on $B_1$) to see mean-zero “clumpiness” used in Gowers-type arguments. |
-| **Pair health map (proxy)** | Sec. 7.1 (well-conditioned pairs), Lemma 7.5 (not poor) | Coarse 0–3 score from slice-stability of $X,Y$ and a $D$-tube check; **not** a full $(B_i,B_8,B_9,K,K)$ grid norm. |
+| **$\ell\_{1}$-spread analysis** | Definition 6.13 | Test stability of the diagonal-type direction when full algebraic spreadness is unavailable. |
+| **Fourier spectrum (dual group)** | Sec. 6.2, Appendix A (almost periodicity) | $\bigl\lvert \widehat{\mathbb{1}\_{\Lambda}}(r)\bigr\rvert$ over $r \in \mathbb{Z}\_{N}$; compare energy at low modes and at the fixed $\Theta$ to see sparse frequency support. |
+| **Balanced strip** | Balanced $f - \mathbb{E}[f]$ (Sec. 2, Sec. 4) | Visualize $\mathbb{1}\_{\Lambda} - \alpha$ (global or on $B\_1$) to see mean-zero “clumpiness” used in Gowers-type arguments. |
+| **Pair health map (proxy)** | Sec. 7.1 (well-conditioned pairs), Lemma 7.5 (not poor) | Coarse 0–3 score from slice-stability of $X,Y$ and a $D$-tube check; **not** a full $(B\_i,B\_8,B\_9,K,K)$ grid norm. |
 
-### Presentation note ($\ell_{1}$-spread and the heatmap)
+### Presentation note ($\ell\_{1}$-spread and the heatmap)
 
-> **Why check $\ell_{1}$-spreadness on a heatmap?** In Section 6.3 the authors use a **log-potential** argument to show that if a set is not $\ell_{1}$-spread, it can be **partitioned** into pieces that are (cf. Lemma 6.21 and the surrounding recursion). The heatmap marks residues $x$ where the pointwise term $\bigl\lvert \mathbb{E}_{y \sim B_2}[f(x+y)] - \mathbb{E}[f]\bigr\rvert$ is large — i.e. where the obstructions to spreadness live and where “bad pieces” would be carved out in that partitioning step.
+> **Why check $\ell\_{1}$-spreadness on a heatmap?** In Section 6.3 the authors use a **log-potential** argument to show that if a set is not $\ell\_{1}$-spread, it can be **partitioned** into pieces that are (cf. Lemma 6.21 and the surrounding recursion). The heatmap marks residues $x$ where the pointwise term $\bigl\lvert \mathbb{E}\_{y \sim B\_2}[f(x+y)] - \mathbb{E}[f]\bigr\rvert$ is large — i.e. where the obstructions to spreadness live and where “bad pieces” would be carved out in that partitioning step.
 
 ---
 
@@ -203,21 +203,21 @@ python scripts/generate_readme_figures.py
 
 ### Core Bohr set views
 
-**Cardinality vs radius** — $\lvert \Lambda_{\Theta,\varepsilon} \rvert$ for a fixed $\Theta \subset \mathbb{Z}_{180}$:
+**Cardinality vs radius** — $\lvert \Lambda\_{\Theta,\varepsilon} \rvert$ for a fixed $\Theta \subset \mathbb{Z}\_{180}$:
 
 ![Cardinality of Bohr set versus epsilon](docs/images/bohr_cardinality_vs_epsilon.png)
 
-**Membership** in $\mathbb{Z}_{N}$ (same parameters):
+**Membership** in $\mathbb{Z}\_{N}$ (same parameters):
 
 ![Indicator of Bohr set on Z_N](docs/images/bohr_indicator_zn.png)
 
-**Regularity-style ratios** — sandwich $\Lambda_{\varepsilon(1\pm\sigma)}$ vs $\Lambda_{\varepsilon}$ (qualitative analogue of Definition 6.3):
+**Regularity-style ratios** — sandwich $\Lambda\_{\varepsilon(1\pm\sigma)}$ vs $\Lambda\_{\varepsilon}$ (qualitative analogue of Definition 6.3):
 
 ![Regularity-style size ratios](docs/images/regularity_size_ratios.png)
 
 ### Fourier dual group (almost periodicity viewpoint)
 
-**$\bigl\lvert \widehat{\mathbb{1}_{\Lambda}}(r)\bigr\rvert$** on $\mathbb{Z}_{N}$ (vertical lines at frequencies in $\Theta$):
+**$\bigl\lvert \widehat{\mathbb{1}\_{\Lambda}}(r)\bigr\rvert$** on $\mathbb{Z}\_{N}$ (vertical lines at frequencies in $\Theta$):
 
 ![Fourier magnitudes of Bohr indicator](docs/images/fourier_bohr_indicator.png)
 
@@ -233,8 +233,8 @@ python scripts/generate_readme_figures.py
 
 | File | Role |
 |------|------|
-| `bohr_set.py` | Torus norm, $\Lambda_{\Theta,\varepsilon}$, regularity sandwich, random walk / TV, sub-Bohr sifting, Bohr chains, $\ell_{1}$-spread, **dual Fourier magnitudes**, **balanced function**, **pair-health proxy matrix** |
-| `app.py` | Streamlit UI: nested $B_2 \subset B_1$, sparse $A$, Fourier spectrum, balanced strip, **coloring strip (Sec. 8 pedagogy)**, pair-health heatmap, earlier tabs |
+| `bohr_set.py` | Torus norm, $\Lambda\_{\Theta,\varepsilon}$, regularity sandwich, random walk / TV, sub-Bohr sifting, Bohr chains, $\ell\_{1}$-spread, **dual Fourier magnitudes**, **balanced function**, **pair-health proxy matrix** |
+| `app.py` | Streamlit UI: nested $B\_2 \subset B\_1$, sparse $A$, Fourier spectrum, balanced strip, **coloring strip (Sec. 8 pedagogy)**, pair-health heatmap, earlier tabs |
 | `scripts/generate_readme_figures.py` | Writes `docs/images/*.png` (Bohr curves, indicator, regularity, **Fourier**, **quantitative arc**, **non-abelian pipeline**) |
 
 ---
