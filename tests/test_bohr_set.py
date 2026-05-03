@@ -8,10 +8,13 @@ from bohr_set import (
     balanced_function,
     bohr_chain_sizes,
     bohr_mask,
+    bohr_mask_anisotropic,
     bohr_size,
     cyclic_group_coloring,
     dual_group_fourier_magnitude,
+    grid_norm_pipe_v1_dict,
     l1_spread_analysis,
+    nested_bohr_density_ratio_scan,
     pair_health_proxy_matrix,
     regularity_check,
     sample_sparse_subset_of_mask,
@@ -83,6 +86,34 @@ def test_coloring_mod_mono_probability():
     assert st.colors.shape == (N,)
     k = int(lam.sum())
     assert abs(st.p_random_monochromatic - float(4 ** (1 - k))) < 1e-9
+
+
+def test_bohr_mask_anisotropic_nested():
+    N, th = 100, [3, 17]
+    exy, ed = 0.14, 0.06
+    vec = [exy, ed]
+    m_iso = bohr_mask(N, th, min(exy, ed))
+    m_an = bohr_mask_anisotropic(N, th, vec, norm="linf")
+    assert m_an.sum() >= m_iso.sum()
+
+
+def test_nested_density_ratio_finite():
+    N, th = 120, [7, 19]
+    ei, eo = 0.04, np.linspace(0.06, 0.22, 15)
+    x, emp, theo = nested_bohr_density_ratio_scan(N, th, ei, eo, norm="linf", constant_C=1.0)
+    assert len(x) == len(emp) == len(theo)
+    assert np.any(np.isfinite(emp))
+
+
+def test_grid_norm_pipe_schema():
+    N = 30
+    m = bohr_mask(N, [4], 0.2)
+    d = grid_norm_pipe_v1_dict(
+        N, m, [4], norm="linf", isotropic_eps=0.2, eps_per_theta=None, anisotropic=False
+    )
+    assert d["schema"] == "grid_norm_pipe_v1"
+    assert d["N"] == N
+    assert len(d["mask_bits"]) == N
 
 
 def test_pair_health_matrix_shape():

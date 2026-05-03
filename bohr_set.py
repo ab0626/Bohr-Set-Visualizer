@@ -61,6 +61,121 @@ def bohr_size(N: int, thetas: Sequence[int], eps: float, norm: NormType = "linf"
     return int(bohr_mask(N, thetas, eps, norm=norm).sum())
 
 
+def bohr_mask_anisotropic(
+    N: int,
+    thetas: Sequence[int],
+    eps_per_theta: Sequence[float],
+    norm: NormType = "linf",
+) -> np.ndarray:
+    """
+    Per-character Bohr ball: x lies in the anisotropic Bohr set iff for each i,
+    ||θ_i x / N||_{T} < ε_i  (ℓ∞ on T^d with axis-dependent thresholds).
+
+    For **mean (ℓ1)** norm: require (1/d) Σ_i ||θ_i x/N||_T / ε_i < 1 (weighted mean),
+    so different ε_i shrink or enlarge that coordinate's contribution (Sec. 7.1
+    “diagonal vs XY” pedagogy when ε_diagonal differs from ε_XY).
+    """
+    if N < 1:
+        raise ValueError("N must be positive")
+    thetas = list(thetas)
+    eps_per_theta = np.asarray(eps_per_theta, dtype=float).reshape(-1)
+    if len(eps_per_theta) != len(thetas):
+        raise ValueError("eps_per_theta must have length |Θ|")
+    if np.any(eps_per_theta <= 0) or np.any(eps_per_theta > 0.5):
+        raise ValueError("each ε_i should lie in (0, 1/2]")
+    if not thetas:
+        return np.ones(N, dtype=bool)
+
+    x = np.arange(N, dtype=np.int64)
+    dists = np.stack([torus_norm(th * x / N) for th in thetas], axis=0)
+    if norm == "linf":
+        return np.all(dists < eps_per_theta[:, np.newaxis], axis=0)
+    # anisotropic ℓ1-mean: average of normalized coordinate margins
+    ratios = dists / np.maximum(eps_per_theta[:, np.newaxis], 1e-15)
+    return np.mean(ratios, axis=0) < 1.0
+
+
+def nested_bohr_density_ratio_scan(
+    N: int,
+    thetas: Sequence[int],
+    eps_inner: float,
+    eps_outer_grid: np.ndarray,
+    norm: NormType = "linf",
+    constant_C: float = 1.0,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """
+    Empirical |B₁|/|B₂| for nested Bohr sets B_j = Λ_{Θ, ε_j} with fixed inner radius
+    ε_inner and varying outer radius, versus the Lemma 6.2–style scaling guide
+    **C · (ε_outer / ε_inner)^d** (illustrative; constants depend on the ambient group).
+
+    Returns (valid_eps_outer, empirical_ratio, theoretical_bound) — NaNs where
+    ε_outer ≤ ε_inner or sizes vanish.
+    """
+    thetas = list(thetas)
+    d = len(thetas)
+    eps_inner = float(eps_inner)
+    out_e: list[float] = []
+    out_emp: list[float] = []
+    out_theo: list[float] = []
+    for e_out in np.asarray(eps_outer_grid, dtype=float).reshape(-1):
+        if e_out <= eps_inner or e_out > 0.5:
+            out_e.append(float(e_out))
+            out_emp.append(float("nan"))
+            out_theo.append(float("nan"))
+            continue
+        s1 = bohr_size(N, thetas, float(e_out), norm=norm)
+        s2 = bohr_size(N, thetas, eps_inner, norm=norm)
+        if s2 == 0:
+            out_e.append(float(e_out))
+            out_emp.append(float("nan"))
+            out_theo.append(float("nan"))
+            continue
+        rho = float(e_out) / eps_inner
+        out_e.append(float(e_out))
+        out_emp.append(s1 / s2)
+        out_theo.append(float(constant_C) * (rho**d))
+    return np.asarray(out_e), np.asarray(out_emp), np.asarray(out_theo)
+
+
+def grid_norm_pipe_v1_dict(
+    N: int,
+    mask: np.ndarray,
+    thetas: Sequence[int],
+    *,
+    norm: NormType,
+    isotropic_eps: float | None,
+    eps_per_theta: Sequence[float] | None,
+    anisotropic: bool,
+) -> dict:
+    """
+    Export payload for external **grid norm** auditors (schema grid_norm_pipe_v1).
+
+    Section 2.3 / structured majorant: the Bohr indicator is a natural test input.
+    """
+    m = np.asarray(mask, dtype=bool).reshape(-1)
+    idx = np.nonzero(m)[0].astype(np.int64)
+    meta: dict = {
+        "thetas": [int(t) for t in thetas],
+        "norm": norm,
+        "anisotropic": bool(anisotropic),
+    }
+    if isotropic_eps is not None:
+        meta["isotropic_eps"] = float(isotropic_eps)
+    if eps_per_theta is not None:
+        meta["eps_per_theta"] = [float(x) for x in eps_per_theta]
+
+    return {
+        "schema": "grid_norm_pipe_v1",
+        "version": 1,
+        "source": "bohr_set_visualizer",
+        "group_model": "cyclic",
+        "N": int(N),
+        "mask_bits": [bool(x) for x in m.tolist()],
+        "indices": [int(x) for x in idx.tolist()],
+        "meta": meta,
+    }
+
+
 @dataclass
 class RegularityReport:
     """
@@ -129,13 +244,19 @@ def random_walk_empirical(
     steps: int,
     seed: int | None = None,
     norm: NormType = "linf",
+    support_mask: np.ndarray | None = None,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
     Random walk: X_0 = 0, X_{t+1} = X_t + S_t (mod N) with S_t uniform on Λ_{Θ,ε}.
+    If **support_mask** is given (e.g. anisotropic Bohr set), steps are uniform on that mask;
+    otherwise Λ is the isotropic Bohr set from (Θ, ε).
     Returns (times, positions, visit_counts on Z_N).
     """
     rng = np.random.default_rng(seed)
-    lam = bohr_set(N, thetas, eps, norm=norm)
+    if support_mask is not None:
+        lam = np.nonzero(np.asarray(support_mask, dtype=bool).reshape(N))[0].astype(np.int64)
+    else:
+        lam = bohr_set(N, thetas, eps, norm=norm)
     if len(lam) == 0:
         raise ValueError("Bohr set is empty; increase ε or change Θ")
     pos = 0
@@ -157,6 +278,7 @@ def shift_invariance_tv(
     eps: float,
     a: int,
     norm: NormType = "linf",
+    reference_mask: np.ndarray | None = None,
 ) -> float:
     """
     Total variation distance between normalized visit law P and P shifted by a
@@ -164,7 +286,11 @@ def shift_invariance_tv(
     invariance of the empirical measure on long walks (Lemma 6.5 style).
     """
     N = len(visit_counts)
-    lam_mask = bohr_mask(N, thetas, eps, norm=norm)
+    lam_mask = (
+        np.asarray(reference_mask, dtype=bool).reshape(N)
+        if reference_mask is not None
+        else bohr_mask(N, thetas, eps, norm=norm)
+    )
     p = visit_counts.astype(float)
     tot = p.sum()
     if tot <= 0:
@@ -174,10 +300,20 @@ def shift_invariance_tv(
     return 0.5 * float(np.abs(p - q).sum())
 
 
-def uniform_on_bohr_tv(visit_counts: np.ndarray, thetas: Sequence[int], eps: float, norm: NormType = "linf") -> float:
-    """TV distance from visits to uniform on Λ_{Θ,ε}."""
+def uniform_on_bohr_tv(
+    visit_counts: np.ndarray,
+    thetas: Sequence[int],
+    eps: float,
+    norm: NormType = "linf",
+    reference_mask: np.ndarray | None = None,
+) -> float:
+    """TV distance from visits to uniform on Λ_{Θ,ε} (or on **reference_mask** if provided)."""
     N = len(visit_counts)
-    m = bohr_mask(N, thetas, eps, norm=norm)
+    m = (
+        np.asarray(reference_mask, dtype=bool).reshape(N)
+        if reference_mask is not None
+        else bohr_mask(N, thetas, eps, norm=norm)
+    )
     k = int(m.sum())
     if k == 0:
         return float("nan")

@@ -5,6 +5,7 @@ Run: streamlit run app.py
 
 from __future__ import annotations
 
+import json
 import numpy as np
 import plotly.graph_objects as go
 import streamlit as st
@@ -14,11 +15,14 @@ from bohr_set import (
     balanced_function,
     bohr_chain_sizes,
     bohr_mask,
+    bohr_mask_anisotropic,
     bohr_set,
     bohr_size,
     cyclic_group_coloring,
     dual_group_fourier_magnitude,
+    grid_norm_pipe_v1_dict,
     l1_spread_analysis,
+    nested_bohr_density_ratio_scan,
     pair_health_proxy_matrix,
     random_walk_empirical,
     regularity_check,
@@ -97,13 +101,63 @@ mask_a = sample_sparse_subset_of_mask(m_b1, float(rho_a), np.random.default_rng(
 
 eps = st.slider("Radius ε (in ℝ/ℤ)", min_value=0.002, max_value=0.49, value=0.08, step=0.002, format="%.3f")
 
-mask = bohr_mask(int(N), thetas, float(eps), norm=norm)
+use_anisotropic = st.checkbox(
+    "Anisotropic radii (ε_XY vs ε_D — Sec. 7.1 diagonal / XY pedagogy)",
+    value=False,
+    key="use_anisotropic",
+    help="Per-character thresholds: relax one direction and tighten another to mimic different Bohr width for D vs (X,Y).",
+)
+aniso_eps_vec: list[float] | None = None
+if use_anisotropic:
+    st.caption(
+        "ℓ∞: require ||θ_i x/N|| < ε_i for each i. ℓ1 (mean): average of ||θ_i x/N||/ε_i is < 1. "
+        "First d−1 modes share **ε_XY**; last mode uses **ε_D** (diagonal proxy)."
+    )
+    if int(dim_d) >= 2:
+        eps_xy = st.slider(
+            "ε_XY (first d−1 modes)",
+            min_value=0.002,
+            max_value=0.49,
+            value=min(0.12, float(eps)),
+            step=0.002,
+            format="%.3f",
+            key="eps_xy",
+        )
+        eps_D = st.slider(
+            "ε_D (last mode / diagonal)",
+            min_value=0.002,
+            max_value=0.49,
+            value=min(0.06, float(eps) * 0.75),
+            step=0.002,
+            format="%.3f",
+            key="eps_D",
+        )
+        aniso_eps_vec = [float(eps_xy)] * (int(dim_d) - 1) + [float(eps_D)]
+        mask = bohr_mask_anisotropic(int(N), thetas, aniso_eps_vec, norm=norm)
+        eps_eff = max(aniso_eps_vec)
+    else:
+        eps_a = st.slider(
+            "ε (single mode)",
+            min_value=0.002,
+            max_value=0.49,
+            value=float(eps),
+            step=0.002,
+            format="%.3f",
+            key="eps_aniso_single",
+        )
+        aniso_eps_vec = [float(eps_a)]
+        mask = bohr_mask_anisotropic(int(N), thetas, aniso_eps_vec, norm=norm)
+        eps_eff = float(eps_a)
+else:
+    eps_eff = float(eps)
+    mask = bohr_mask(int(N), thetas, float(eps), norm=norm)
+
 lam = np.nonzero(mask)[0]
 size = int(lam.size)
 
 st.metric("|Λ_{Θ,ε}|", f"{size}  ({100.0 * size / N:.2f}% of ℤ_N)")
 
-tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs(
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9 = st.tabs(
     [
         "Size vs ε · membership",
         "Regularity (Def. 6.3 style)",
@@ -113,6 +167,7 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs(
         "ℓ₁-spread heatmap (Def. 6.13)",
         "Fourier spectrum (dual group)",
         "Pair health (Sec. 7.1 proxy)",
+        "Scaling · pipe (§6.3)",
     ]
 )
 
@@ -124,7 +179,7 @@ with tab1:
     sizes = [bohr_size(int(N), thetas, float(e), norm=norm) for e in eps_grid]
     fig1 = go.Figure()
     fig1.add_trace(go.Scatter(x=eps_grid, y=sizes, mode="lines", name="|Λ|"))
-    fig1.add_vline(x=eps, line_dash="dash", annotation_text="current ε")
+    fig1.add_vline(x=eps_eff, line_dash="dash", annotation_text="current ε")
     fig1.update_layout(
         title="|Λ_{Θ,ε}| vs ε",
         xaxis_title="ε",
@@ -231,10 +286,10 @@ It is **not** a 3D corner finder; it illustrates why **quasipolynomial** density
         base_t = [((j + 1) * max(1, N // (d_max + 2))) % N for j in range(d_max)]
         base_t = [t if t != 0 else 1 for t in base_t]
     ds = list(range(1, d_max + 1))
-    sizes_d = [bohr_size(int(N), base_t[:d], float(eps), norm=norm) for d in ds]
+    sizes_d = [bohr_size(int(N), base_t[:d], float(eps_eff), norm=norm) for d in ds]
     fig_d = go.Figure(go.Scatter(x=ds, y=sizes_d, mode="lines+markers"))
     fig_d.update_layout(
-        title=f"|Λ| vs d at fixed ε = {eps:.3f}",
+        title=f"|Λ| vs d at fixed ε = {eps_eff:.3f}",
         xaxis_title="d",
         yaxis_title="|Λ|",
         height=360,
@@ -285,18 +340,31 @@ Long-run visit frequencies test mixing and **shift invariance**: compare empiric
     if st.button("Run walk"):
         try:
             tidx, positions, visits = random_walk_empirical(
-                int(N), thetas, float(eps), int(steps), seed=int(wseed), norm=norm
+                int(N),
+                thetas,
+                float(eps),
+                int(steps),
+                seed=int(wseed),
+                norm=norm,
+                support_mask=mask,
             )
-            tv_uni = uniform_on_bohr_tv(visits, thetas, float(eps), norm=norm)
-            tv_shift = shift_invariance_tv(visits, thetas, float(eps), int(shift_a), norm=norm)
+            tv_uni = uniform_on_bohr_tv(visits, thetas, float(eps), norm=norm, reference_mask=mask)
+            tv_shift = shift_invariance_tv(
+                visits, thetas, float(eps), int(shift_a), norm=norm, reference_mask=mask
+            )
             st.write(f"**TV to uniform on Λ:** {tv_uni:.4f}  (→ 0 if visits mix on Λ)")
             st.write(f"**TV to shift by a={shift_a}:** {tv_shift:.4f}  (→ 0 if empirical law is shift-invariant)")
 
             # Also report a few random a in Λ
-            lam_arr = bohr_set(int(N), thetas, float(eps), norm=norm)
+            lam_arr = np.nonzero(mask)[0].astype(np.int64)
             if len(lam_arr) > 1:
                 aa = rng.choice(lam_arr, size=min(5, len(lam_arr)), replace=False)
-                tvs = [shift_invariance_tv(visits, thetas, float(eps), int(a), norm=norm) for a in aa]
+                tvs = [
+                    shift_invariance_tv(
+                        visits, thetas, float(eps), int(a), norm=norm, reference_mask=mask
+                    )
+                    for a in aa
+                ]
                 st.caption(f"Sample shifts in Λ: {list(map(int, aa))} → TV = {[round(v, 4) for v in tvs]}")
 
             fig_t = go.Figure()
@@ -602,3 +670,94 @@ Scores $0,1,2,3$ count how many checks pass at your thresholds $(\varepsilon_s,\
             height=min(520, 20 * max(8, len(ph.x_indices) // 2)),
         )
         st.plotly_chart(fig_ph, use_container_width=True)
+
+with tab9:
+    st.markdown(
+        r"""
+**Nested Bohr density ratio (§6.3 maintenance).** For nested Bohr sets $B_2=\Lambda_{\Theta,\varepsilon_{\mathrm{inner}}}\subseteq B_1=\Lambda_{\Theta,\varepsilon_{\mathrm{outer}}}$,
+the cardinality ratio $\lvert B_1\rvert/\lvert B_2\rvert$ is compared to the Lemma **6.2** scaling guide $C\cdot(\varepsilon_{\mathrm{outer}}/\varepsilon_{\mathrm{inner}})^{d}$
+(with $d=\lvert\Theta\rvert$). This is **illustrative**: sharp constants depend on $G$ and regularity; the plot checks that the implementation’s discrete counts track the correct **dimension exponent** in $\varepsilon$.
+        """
+    )
+    st.caption(
+        "Scan uses **isotropic** radii from the nested-Bohr expander (ε_outer, ε_inner), independent of the anisotropic toggle for the main Λ mask."
+    )
+    C_sim = st.slider(
+        "Guide constant C in C·(ε_outer/ε_inner)^d",
+        min_value=0.25,
+        max_value=4.0,
+        value=1.0,
+        step=0.05,
+        key="ratio_C",
+    )
+    n_scan_pts = st.slider("Scan points", min_value=15, max_value=90, value=45, step=5, key="ratio_scan_n")
+
+    lo = float(eps_inner) + 0.003
+    hi = min(0.49, max(float(eps_outer), lo + 0.02))
+    if hi <= lo:
+        st.warning("Set **ε_outer > ε_inner** in the expander so we can scan nested outer radii.")
+    else:
+        eo_grid = np.linspace(lo, hi, int(n_scan_pts))
+        rx, emp_r, theo_r = nested_bohr_density_ratio_scan(
+            int(N),
+            thetas,
+            float(eps_inner),
+            eo_grid,
+            norm=norm,
+            constant_C=float(C_sim),
+        )
+        fig_r = go.Figure()
+        fig_r.add_trace(
+            go.Scatter(
+                x=rx,
+                y=emp_r,
+                mode="lines+markers",
+                name=r"$|B_1|/|B_2|$ empirical",
+                line=dict(color="#1f77b4"),
+            )
+        )
+        fig_r.add_trace(
+            go.Scatter(
+                x=rx,
+                y=theo_r,
+                mode="lines",
+                name=r"$C\,(\varepsilon_{\mathrm{outer}}/\varepsilon_{\mathrm{inner}})^d$",
+                line=dict(color="#ff7f0e", dash="dash"),
+            )
+        )
+        fig_r.update_layout(
+            title="Nested Bohr cardinality ratio vs outer radius (fixed inner radius from expander)",
+            xaxis_title=r"$\varepsilon_{\mathrm{outer}}$",
+            yaxis_title="ratio",
+            height=440,
+            legend=dict(yanchor="top", y=0.99, xanchor="left", x=0.01),
+        )
+        st.plotly_chart(fig_r, use_container_width=True)
+        st.caption(
+            f"Inner radius fixed at ε_inner = {float(eps_inner):.3f} (slider in expander). "
+            f"Current expander ε_outer = {float(eps_outer):.3f}."
+        )
+
+    st.subheader("grid_norm_pipe_v1 export")
+    st.markdown(
+        r"""
+Export the **current** Bohr membership mask (same $\Lambda$ as the rest of this session) as JSON **schema `grid_norm_pipe_v1`**
+for downstream **Gowers grid norm** auditors (Sec. 2.3 — structured inputs).
+        """
+    )
+    _pipe = grid_norm_pipe_v1_dict(
+        int(N),
+        mask,
+        thetas,
+        norm=norm,
+        isotropic_eps=float(eps) if not use_anisotropic else None,
+        eps_per_theta=aniso_eps_vec if use_anisotropic else None,
+        anisotropic=bool(use_anisotropic),
+    )
+    st.download_button(
+        label="Download bohr_pipe JSON",
+        file_name=f"bohr_grid_norm_pipe_v1_N{int(N)}.json",
+        mime="application/json",
+        data=json.dumps(_pipe, indent=2),
+        key="dl_pipe",
+    )
