@@ -179,9 +179,9 @@ with tab1:
 
     with st.expander("Coloring strip (Sec. 8 — pedagogical)", expanded=False):
         st.markdown(
-            """
-The paper’s **coloring** corollary (Sec. 8, Corollary 1.2 style) lives on **$G^3$** with **$L \asymp \log\log\log|G|$** colors.
-This toy colors **one copy** of $\\mathbb{Z}_N$ and asks how many colors hit **$\\Lambda$** and whether **$\\Lambda$** is **monochromatic** under a fixed rule.
+            r"""
+The paper’s **coloring** corollary (Sec. 8, Corollary 1.2 style) lives on **$G \times G \times G$** with **$L \asymp \log\log\log |G|$** colors.
+This toy colors **one copy** of $\mathbb{Z}_N$ and asks how many colors hit **$\Lambda$** and whether **$\Lambda$** is **monochromatic** under a fixed rule.
 It is **not** a 3D corner finder; it illustrates why **quasipolynomial** density savings beat **doubly logarithmic** ones for tower-type color-size tradeoffs.
             """
         )
@@ -482,7 +482,7 @@ with tab7:
     st.markdown(
         """
 **Dual characters of** $\\mathbb{Z}_N$: $\\chi_r(x)=e^{-2\\pi i r x/N}$. For $f:\\mathbb{Z}_N\\to\\mathbb{R}$ the transform is
-$\\widehat f(r)=\\sum_x f(x)\\chi_r(x)$. This tab plots **$|\\widehat{\\mathbb{1}_\\Lambda}(r)|$** (and optional other indicators).
+$\\widehat f(r)=\\sum_x f(x)\\chi_r(x)$. This tab plots **$|\\widehat{\\mathbb{1}_{\\Lambda}}(r)|$** (and optional other indicators).
 Peaks at small $r$ and at the defining modes $\\Theta$ illustrate that Bohr sets are **concentrated in low / structured frequency** (cf. almost periodicity, Sec. 6.2 and Appendix A in the paper).
         """
     )

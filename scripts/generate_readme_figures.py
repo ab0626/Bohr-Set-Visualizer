@@ -16,7 +16,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-from bohr_set import bohr_mask, bohr_size
+from bohr_set import bohr_mask, bohr_size, dual_group_fourier_magnitude
 
 
 def main() -> None:
@@ -92,6 +92,62 @@ def main() -> None:
     fig3.tight_layout()
     fig3.savefig(os.path.join(out_dir, "regularity_size_ratios.png"))
     plt.close(fig3)
+
+    # Illustrative quantitative arc (not literal theorem constants)
+    fig4, ax4 = plt.subplots(figsize=(7.2, 4.2), dpi=150)
+    n = np.logspace(1.5, 5, 80)
+    doubly_log = 1.0 / np.maximum(np.log(np.maximum(np.log(n), np.e)), 1e-6) ** 0.4
+    quasi = np.exp(-(np.log(n) ** 0.35))
+    ax4.loglog(n, doubly_log / doubly_log.max(), label=r"illustrative $(\log\log |G|)^{-c}$ regime", color="#7f7f7f", lw=2)
+    ax4.loglog(n, quasi / quasi.max(), label=r"illustrative $\exp(-(\log|G|)^{\Omega(1)})$ saving", color="#1f77b4", lw=2)
+    ax4.set_xlabel(r"group size $|G|$ (illustrative)")
+    ax4.set_ylabel(r"normalized density savings (schematic)")
+    ax4.set_title("Quantitative arc (schematic — see paper for definitions)")
+    ax4.legend(loc="lower left", fontsize=9)
+    ax4.grid(True, which="both", alpha=0.3)
+    fig4.tight_layout()
+    fig4.savefig(os.path.join(out_dir, "quantitative_arc_schematic.png"))
+    plt.close(fig4)
+
+    # Fourier magnitudes of Bohr indicator (dual group of Z_N)
+    f_ind = mask.astype(float)
+    mag = dual_group_fourier_magnitude(f_ind)
+    fig5, ax5 = plt.subplots(figsize=(8, 3.8), dpi=150)
+    ax5.plot(np.arange(N), mag, color="#2ca02c", lw=1.0)
+    for th in thetas:
+        ax5.axvline(th, color="#d62728", ls=":", lw=1.0, alpha=0.8)
+    ax5.set_xlabel(r"dual frequency index $r \in \mathbb{Z}_N$")
+    ax5.set_ylabel(r"$|\widehat{\mathbf{1}_\Lambda}(r)|$")
+    ax5.set_title(rf"Fourier magnitudes for same $\Theta={tuple(thetas)}$, $\varepsilon={eps_cur}$")
+    fig5.tight_layout()
+    fig5.savefig(os.path.join(out_dir, "fourier_bohr_indicator.png"))
+    plt.close(fig5)
+
+    # Non-abelian extension pipeline (conceptual)
+    fig6, ax6 = plt.subplots(figsize=(8.5, 2.4), dpi=150)
+    ax6.set_xlim(0, 10)
+    ax6.set_ylim(0, 1)
+    ax6.axis("off")
+    boxes = [
+        (0.2, 0.35, 1.6, 0.55, "finite group G"),
+        (2.3, 0.35, 1.8, 0.55, "large abelian\nsubgroup H ⊆ G"),
+        (4.7, 0.35, 1.9, 0.55, "corners theorem\non H"),
+        (7.2, 0.35, 1.8, 0.55, "average / lift\nto G"),
+    ]
+    for x, y, w, h, txt in boxes:
+        ax6.add_patch(plt.Rectangle((x, y), w, h, fill=False, lw=1.8, ec="#333"))
+        ax6.text(x + w / 2, y + h / 2, txt, ha="center", va="center", fontsize=11)
+    for i in range(3):
+        ax6.annotate(
+            "",
+            xy=(boxes[i + 1][0], 0.625),
+            xytext=(boxes[i][0] + boxes[i][2], 0.625),
+            arrowprops=dict(arrowstyle="->", lw=1.5, color="#555"),
+        )
+    ax6.set_title(r"Non-abelian extension (Sec. 1.1 — conceptual)", fontsize=12, pad=12)
+    fig6.tight_layout()
+    fig6.savefig(os.path.join(out_dir, "nonabelian_pipeline.png"))
+    plt.close(fig6)
 
     print("Wrote PNGs to", out_dir)
 

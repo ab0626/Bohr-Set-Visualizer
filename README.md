@@ -55,13 +55,17 @@ The main theorem is stated for **finite abelian** $G$, but the introduction expl
 
 **Implementation link.** This repository only draws **$G = \mathbb{Z}_N$**, but that model is exactly the kind of **abelian building block** that feeds the general proof: Bohr sets are the right **containers** inside $H$; the lift to arbitrary $G$ is conceptual, not a different codebase.
 
+![Conceptual pipeline: abelian piece to full group](docs/images/nonabelian_pipeline.png)
+
+*Schematic (Sec. 1.1). The paper explains how abelian bounds transfer to all finite $G$ via a large abelian $H$ and an averaging / lifting step. This figure is a storytelling aid, not a literal algorithm.*
+
 ---
 
 ## Coloring and the “tower” warning (Section 8)
 
-The paper’s **coloring** corollary (Corollary 1.2, Sec. 8) addresses **$G \times G \times G$** with about **$L \asymp \log\log\log|G|$** colors, forcing a **monochromatic corner**. The authors stress that with **only** doubly-logarithmic density savings (as in Shkredov’s classical regime), one would face **tower-type** losses in how many colors can be handled — i.e. the quantitative strength of the new bound is what makes a **polylogarithmic-in-log** color count possible.
+The paper’s **coloring** corollary (Corollary 1.2, Sec. 8) addresses **$G \times G \times G$** with about **$L \asymp \log\log\log \lvert G\rvert$** colors, forcing a **monochromatic corner**. The authors stress that with **only** doubly-logarithmic density savings (as in Shkredov’s classical regime), one would face **tower-type** losses in how many colors can be handled — i.e. the quantitative strength of the new bound is what makes a **polylogarithmic-in-log** color count possible.
 
-**Visualizer add-on.** Under **Tab 1 → “Coloring strip”**, the app assigns an **$L$-coloring** of $\mathbb{Z}_N$ (either $x \bmod L$ or i.i.d. random) and reports how many colors appear on the current Bohr set $\Lambda$, whether $\Lambda$ is monochromatic, and the exact probability $L^{1-|\Lambda|}$ that a **fully random** coloring makes $\Lambda$ monochromatic. That toy is **1-dimensional**; it is meant only to build intuition for why **better-than–$\log\log$** density decay matters for multicolor statements.
+**Visualizer add-on.** Under **Tab 1 → “Coloring strip”**, the app assigns an **$L$-coloring** of $\mathbb{Z}_N$ (either $x \bmod L$ or i.i.d. random) and reports how many colors appear on the current Bohr set $\Lambda$, whether $\Lambda$ is monochromatic, and the exact probability $L^{1-\lvert \Lambda\rvert}$ that a **fully random** coloring makes $\Lambda$ monochromatic. That toy is **1-dimensional**; it is meant only to build intuition for why density decay **stronger than** $(\log\log \lvert G\rvert)^{-c}$ matters for multicolor statements.
 
 ---
 
@@ -69,9 +73,13 @@ The paper’s **coloring** corollary (Corollary 1.2, Sec. 8) addresses **$G \tim
 
 | Aspect | Shkredov (2006) corner bound | Jaber et al. (2025) |
 |--------|------------------------------|----------------------|
-| **Strength** | Doubly logarithmic: density $\ll (\log\log |G|)^{-c}$ | **Quasipolynomial**: $|A| \le |G|^2 \exp\bigl(-(\log|G|)^{\Omega(1)}\bigr)$ |
+| **Strength** | Doubly logarithmic: density $\ll (\log\log \lvert G\rvert)^{-c}$ | **Quasipolynomial**: $\lvert A\rvert \le \lvert G\rvert^2 \exp\bigl(-(\log \lvert G\rvert)^{\Omega(1)}\bigr)$ |
 | **Core mechanism** | $L^2$ / energy-style increment | **Relative sifting**, **Bohr containers**, **Gowers grid norms**, **asymmetric** treatment of the diagonal $D$ ($\ell_1$-spread) |
 | **Diagonal** | (Symmetric finite-field intuition) | **“Diagonal drop”**: $D$ is not assumed algebraically spread like $X,Y$ |
+
+The plot below is **illustrative only** (exponents are not those in the theorems). It compares the *shape* of a doubly-logarithmic saving with a *quasipolynomial*-type saving in $\lvert G\rvert$.
+
+![Schematic comparison of density-saving shapes](docs/images/quantitative_arc_schematic.png)
 
 ---
 
@@ -94,14 +102,18 @@ $$
 \Lambda = \Lambda_{\Theta,\varepsilon} = \bigcap_{i=1}^{d} \Big\{ x \in G : \|\Theta_i(x)\|_{\mathbb{R}/\mathbb{Z}} \le \varepsilon \Big\},
 $$
 
-where $\|x\|_{\mathbb{R}/\mathbb{Z}} = \min_{z \in \mathbb{Z}} |x - z|$. For $c > 0$, **dilation** is $c\Lambda_{\Theta,\varepsilon} = \Lambda_{\Theta,\,c\varepsilon}$. The paper calls $d$ the **dimension** and $\varepsilon$ the **radius** $\nu(\Lambda)$.
+where $\|x\|_{\mathbb{R}/\mathbb{Z}} = \min_{z \in \mathbb{Z}} \lvert x - z \rvert$. For $c > 0$, **dilation** is $c\Lambda_{\Theta,\varepsilon} = \Lambda_{\Theta,\,c\varepsilon}$. The paper calls $d$ the **dimension** and $\varepsilon$ the **radius** $\nu(\Lambda)$.
 
-**Lemma 6.2.** If $\Lambda = \Lambda_{\Theta,\varepsilon}$ has dimension $d$ and radius $\varepsilon$, then $|\Lambda| \ge \varepsilon^d |G|$.
-
-**Definition 6.3 (Regular).** A Bohr set $\Lambda = \Lambda_{\Theta,\varepsilon}$ of dimension $d$ is **regular** if for all $|c| \le 1/(100d)$,
+**Lemma 6.2.** If $\Lambda = \Lambda_{\Theta,\varepsilon}$ has dimension $d$ and radius $\varepsilon$, then
 
 $$
-1 - 100d|c| \;\le\; \frac{|(1+c)\Lambda|}{|\Lambda|} \;\le\; 1 + 100d|c|.
+\lvert \Lambda \rvert \ge \varepsilon^d \lvert G \rvert.
+$$
+
+**Definition 6.3 (Regular).** A Bohr set $\Lambda = \Lambda_{\Theta,\varepsilon}$ of dimension $d$ is **regular** if for all $\lvert c \rvert \le 1/(100d)$,
+
+$$
+1 - 100d\lvert c \rvert \;\le\; \frac{\bigl\lvert (1+c)\Lambda \bigr\rvert}{\lvert \Lambda \rvert} \;\le\; 1 + 100d \lvert c \rvert.
 $$
 
 **Lemma 6.5.** Let $f$ be $1$-bounded and $\Lambda$ a **regular** Bohr set of dimension $d$. If $|c| \le 1/(100d)$ and $n' \in c\Lambda$, then
@@ -148,6 +160,14 @@ The Streamlit app is not only drawing Bohr sets; it **simulates mechanisms** fro
 
 **Breakthrough (informal).** The diagonal-type object $D$ is not treated with the same **algebraic spreadness** used for the other sides; the authors use **$\ell_1$-spreadness** (Definition 6.13) as a workable substitute.
 
+**Definition 6.13 (as stated in the paper, with $B_1,B_2$ regular Bohr sets and $\nu(B_2)\le\nu(B_1)$).** A function $f:B_1\to[0,1]$ is $(B_1,B_2,\varepsilon)$ $\ell_1$-spread when
+
+$$
+\mathbb{E}_{x \sim B_1}\,\Bigl\lvert \mathbb{E}_{y \sim B_2}[f(x+y)] - \mathbb{E}[f] \Bigr\rvert \;\le\; \varepsilon \cdot \mathbb{E}[f],
+$$
+
+with $\mathbb{E}[f]=\mathbb{E}_{x\sim B_1}[f(x)]$.
+
 **What the tool computes.** For $f = \mathbf{1}_A$ (extended by zero off $A$), it evaluates the deviation averaged over $x \sim B_1$:
 
 $$
@@ -163,7 +183,7 @@ with $\mathbb{E}[f] = \mathbb{E}_{x \sim B_1}[f(x)]$, and compares it to $\varep
 | **Sub-Bohr sifting** | Relative sifting (see Sec. 2.2, Sec. 3.5) | Find structure inside a sparse majorant $B_1$ by measuring density relative to $B_1$ and refinement inside $B_2$. |
 | **Increment chain** | $(d,\eta)$-small / exact sequences (Def. 6.6) | Model the iterative Bohr “zoom” where rank is fixed and radius shrinks. |
 | **$\ell_1$-spread analysis** | Definition 6.13 | Test stability of the diagonal-type direction when full algebraic spreadness is unavailable. |
-| **Fourier spectrum (dual group)** | Sec. 6.2, Appendix A (almost periodicity) | $|\widehat{\mathbb{1}_\Lambda}(r)|$ over $r \in \mathbb{Z}_N$; compare energy at low modes and at the fixed $\Theta$ to see sparse frequency support. |
+| **Fourier spectrum (dual group)** | Sec. 6.2, Appendix A (almost periodicity) | $\bigl\lvert \widehat{\mathbb{1}_{\Lambda}}(r)\bigr\rvert$ over $r \in \mathbb{Z}_N$; compare energy at low modes and at the fixed $\Theta$ to see sparse frequency support. |
 | **Balanced strip** | Balanced $f - \mathbb{E}f$ (Sec. 2, Sec. 4) | Visualize $\mathbb{1}_\Lambda - \alpha$ (global or on $B_1$) to see mean-zero “clumpiness” used in Gowers-type arguments. |
 | **Pair health map (proxy)** | Sec. 7.1 (well-conditioned pairs), Lemma 7.5 (not poor) | Coarse 0–3 score from slice-stability of $X,Y$ and a $D$-tube check; **not** a full $(B_i,B_8,B_9,K,K)$ grid norm. |
 
@@ -175,25 +195,37 @@ with $\mathbb{E}[f] = \mathbb{E}_{x \sim B_1}[f(x)]$, and compares it to $\varep
 
 ## Figures (generated)
 
-These PNGs live under `docs/images/` and are referenced with **relative** paths so they render on GitHub.
-
-**Cardinality vs radius** $|\Lambda_{\Theta,\varepsilon}|$ for a fixed $\Theta \subset \mathbb{Z}_{180}$:
-
-![|Λ| vs ε](docs/images/bohr_cardinality_vs_epsilon.png)
-
-**Membership** in $\mathbb{Z}_N$ (same parameters):
-
-![indicator on Z_N](docs/images/bohr_indicator_zn.png)
-
-**Regularity-style ratios** (sandwich $\Lambda_{\varepsilon(1\pm\sigma)}$ vs $\Lambda_\varepsilon$): compare qualitatively to Definition 6.3 — bounded relative change in radius should imply bounded relative change in size for **regular** Bohr sets.
-
-![regularity ratios](docs/images/regularity_size_ratios.png)
-
-Regenerate figures after changing defaults:
+These PNGs live under `docs/images/` and are referenced with **relative** paths so they render on GitHub. Regenerate after changing script defaults:
 
 ```powershell
 python scripts/generate_readme_figures.py
 ```
+
+### Core Bohr set views
+
+**Cardinality vs radius** — $\lvert \Lambda_{\Theta,\varepsilon} \rvert$ for a fixed $\Theta \subset \mathbb{Z}_{180}$:
+
+![Cardinality of Bohr set versus epsilon](docs/images/bohr_cardinality_vs_epsilon.png)
+
+**Membership** in $\mathbb{Z}_N$ (same parameters):
+
+![Indicator of Bohr set on Z_N](docs/images/bohr_indicator_zn.png)
+
+**Regularity-style ratios** — sandwich $\Lambda_{\varepsilon(1\pm\sigma)}$ vs $\Lambda_\varepsilon$ (qualitative analogue of Definition 6.3):
+
+![Regularity-style size ratios](docs/images/regularity_size_ratios.png)
+
+### Fourier dual group (almost periodicity viewpoint)
+
+**$\widehat{\mathbf{1}_\Lambda}(r)$** on $\mathbb{Z}_N$ (vertical lines at frequencies in $\Theta$):
+
+![Fourier magnitudes of Bohr indicator](docs/images/fourier_bohr_indicator.png)
+
+### Conceptual diagrams (from earlier sections)
+
+![Non-abelian extension pipeline](docs/images/nonabelian_pipeline.png)
+
+![Quantitative arc schematic](docs/images/quantitative_arc_schematic.png)
 
 ---
 
@@ -203,7 +235,7 @@ python scripts/generate_readme_figures.py
 |------|------|
 | `bohr_set.py` | Torus norm, $\Lambda_{\Theta,\varepsilon}$, regularity sandwich, random walk / TV, sub-Bohr sifting, Bohr chains, $\ell_1$-spread, **dual Fourier magnitudes**, **balanced function**, **pair-health proxy matrix** |
 | `app.py` | Streamlit UI: nested $B_2 \subset B_1$, sparse $A$, Fourier spectrum, balanced strip, **coloring strip (Sec. 8 pedagogy)**, pair-health heatmap, earlier tabs |
-| `scripts/generate_readme_figures.py` | Builds `docs/images/*.png` |
+| `scripts/generate_readme_figures.py` | Writes `docs/images/*.png` (Bohr curves, indicator, regularity, **Fourier**, **quantitative arc**, **non-abelian pipeline**) |
 
 ---
 
@@ -216,6 +248,17 @@ streamlit run app.py
 ```
 
 Python 3.10+ recommended.
+
+### Tests
+
+```powershell
+cd "c:\Users\adith\Bohr Set Visualizer"
+pip install -r requirements.txt
+$env:PYTEST_DISABLE_PLUGIN_AUTOLOAD = "1"   # avoids broken third-party pytest plugins on some machines
+python -m pytest tests/ -v
+```
+
+Or run `powershell -File scripts/run_tests.ps1`.
 
 ---
 
